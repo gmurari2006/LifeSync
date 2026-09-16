@@ -70,3 +70,7 @@ async def health_check() -> HealthResponse:
 
 # Include API v1 Router under /api/v1 prefix
 app.include_router(api_router, prefix=settings.API_V1_STR)
+
+# Include WebSocket router for case subscriptions
+from app.realtime.websocket import router as websocket_router
+app.include_router(websocket_router)

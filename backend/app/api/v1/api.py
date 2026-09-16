@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from app.api.v1.endpoints import health, cases, citizen, ems, hospitals, readiness, ai, hospital_matching
+from app.simulation import simulation_router
 
 api_router = APIRouter()
 
@@ -12,3 +13,4 @@ api_router.include_router(hospitals.router, prefix="/hospitals", tags=["Hospital
 api_router.include_router(readiness.router, prefix="/hospitals", tags=["Hospital Readiness"])
 api_router.include_router(ai.router, prefix="/ai", tags=["AI Structuring Layer"])
 api_router.include_router(hospital_matching.router, prefix="/hospital-matching", tags=["Hospital Matching & Diversion"])
+api_router.include_router(simulation_router, prefix="/simulation", tags=["Ambulance Telemetry Simulation"])

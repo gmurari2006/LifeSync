@@ -1,9 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useHospital } from '@/context/HospitalContext';
+import { useCaseWebSocket } from '@/hooks/useCaseWebSocket';
+import { ConnectionStatusBadge } from '@/components/common/ConnectionStatusBadge';
+import { AmbulanceSimulationControlCard } from '@/components/simulation/AmbulanceSimulationControlCard';
 import { PriorityBadge } from '@/components/hospital/PriorityBadge';
 import { StatusBadge } from '@/components/hospital/StatusBadge';
 import { CaseSummaryCard } from '@/components/hospital/CaseSummaryCard';
@@ -14,6 +17,7 @@ import { CaseTimeline } from '@/components/hospital/CaseTimeline';
 import { AcknowledgementModal } from '@/components/hospital/AcknowledgementModal';
 import { DivertModal } from '@/components/hospital/DivertModal';
 import { formatEta } from '@/lib/demo/utils';
+import { AmbulanceTelemetryState } from '@/types/realtime';
 import { 
   ArrowLeft, 
   Clock, 
@@ -46,6 +50,24 @@ export default function CaseDetailPage() {
   const [isAckModalOpen, setIsAckModalOpen] = useState(false);
   const [isDivertModalOpen, setIsDivertModalOpen] = useState(false);
   const [selectedBay, setSelectedBay] = useState('');
+  const [liveTelemetry, setLiveTelemetry] = useState<AmbulanceTelemetryState | null>(null);
+
+  // Authoritative REST refresh callback for WebSocket reconnect
+  const handleReloadAuthoritativeState = useCallback(() => {
+    // In full backend integration this re-fetches /api/v1/hospitals/cases/{caseId}
+  }, [caseId]);
+
+  // Real-Time WebSocket Hook for ED Coordinator
+  const { connectionStatus, reconnect } = useCaseWebSocket({
+    caseId,
+    role: 'ED_COORDINATOR',
+    onReconnect: handleReloadAuthoritativeState,
+    onEvent: (envelope) => {
+      if (envelope.event_type === 'TELEMETRY_UPDATED' && envelope.payload) {
+        setLiveTelemetry(envelope.payload as unknown as AmbulanceTelemetryState);
+      }
+    },
+  });
 
   if (!caseData) {
     return (
@@ -81,17 +103,31 @@ export default function CaseDetailPage() {
     }
   };
 
+  const displayEta = liveTelemetry?.eta_minutes != null
+    ? `${liveTelemetry.eta_minutes.toFixed(1)}m`
+    : formatEta(caseData.emsUnit.etaMinutes);
+
+  const displayDistance = liveTelemetry?.distance_remaining_km != null
+    ? liveTelemetry.distance_remaining_km.toFixed(1)
+    : caseData.emsUnit.distanceRemainingKm;
+
   return (
     <div className="space-y-6">
       {/* Top Back Navigation & Case Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <Link
-          href="/hospital/cases"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-slate-200 transition-colors"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          <span>Back to Emergency Cases Queue</span>
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/hospital/cases"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-slate-200 transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span>Back to Emergency Cases Queue</span>
+          </Link>
+          <ConnectionStatusBadge
+            status={connectionStatus}
+            onReconnect={reconnect}
+          />
+        </div>
 
         {/* Live Sync Status */}
         <div className="flex items-center gap-2 text-xs text-slate-400">
@@ -138,10 +174,10 @@ export default function CaseDetailPage() {
               </span>
               <div className="text-2xl font-mono font-extrabold text-red-400 flex items-center justify-end gap-1.5">
                 <Clock className="h-5 w-5 text-red-400 animate-pulse" />
-                <span>{formatEta(caseData.emsUnit.etaMinutes)}</span>
+                <span>{displayEta}</span>
               </div>
               <span className="text-[11px] text-slate-400">
-                {caseData.emsUnit.distanceRemainingKm} km remaining via {caseData.emsUnit.unitId}
+                {displayDistance} km remaining via {caseData.emsUnit.unitId}
               </span>
             </div>
           </div>
@@ -268,10 +304,20 @@ export default function CaseDetailPage() {
           </div>
         </div>
 
-        {/* Right Column: Hospital Matching, EMS Status & Decision Audit Timeline (5 cols) */}
+        {/* Right Column: Hospital Matching, Simulation, EMS Status & Decision Audit Timeline (5 cols) */}
         <div className="lg:col-span-5 space-y-6">
           {/* Deterministic Matching & Diversion Intelligence */}
           <HospitalMatchingCard caseId={caseData.id} />
+
+          {/* Real-Time Ambulance Simulation & Telemetry Controls */}
+          <AmbulanceSimulationControlCard
+            caseId={caseData.id}
+            hasConfirmedDestination={true}
+            destinationHospitalId={caseData.destinationHospitalId || 'HOSP-CITYCARE-01'}
+            destinationHospitalName={hospitalProfile.name}
+            liveTelemetry={liveTelemetry}
+            onTelemetryUpdate={(tel) => setLiveTelemetry(tel)}
+          />
 
           {/* EMS Telemetry Card */}
           <EmsStatusCard emsUnit={caseData.emsUnit} />
@@ -302,3 +348,4 @@ export default function CaseDetailPage() {
     </div>
   );
 }
+

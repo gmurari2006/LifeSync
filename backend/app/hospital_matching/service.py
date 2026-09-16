@@ -15,6 +15,8 @@ from app.hospital_matching.schemas import (
 from app.hospital_matching.rules import evaluate_hospital_eligibility
 from app.hospital_matching.scoring import compute_simulated_distance_and_eta, compute_suitability_score
 from app.hospital_matching.explanations import generate_candidate_explanation
+from app.realtime.events import publish_case_event
+from app.realtime.schemas import RealtimeEventType, ProvenanceSource
 
 
 class HospitalMatchingService:
@@ -274,6 +276,22 @@ class HospitalMatchingService:
         )
 
         db.commit()
+
+        # Publish delivery-only WebSocket notification
+        publish_case_event(
+            case_id=case.case_id,
+            event_type=RealtimeEventType.DESTINATION_CONFIRMED,
+            source=ProvenanceSource.EMS_VERIFIED if "EMS" in actor_role else ProvenanceSource.HOSPITAL_VERIFIED,
+            payload={
+                "case_id": case.case_id,
+                "confirmed_destination_id": hospital.id,
+                "confirmed_destination_name": hospital.name,
+                "actor_name": actor_name,
+                "actor_role": actor_role,
+                "notes": notes,
+            },
+        )
+
         return self.calculate_matching(db, case.id, persist_record=False)
 
     def reject_destination(
@@ -381,6 +399,20 @@ class HospitalMatchingService:
         )
 
         db.commit()
+
+        publish_case_event(
+            case_id=case.case_id,
+            event_type=RealtimeEventType.HOSPITAL_DIVERSION_REQUESTED,
+            source=ProvenanceSource.HOSPITAL_VERIFIED,
+            payload={
+                "case_id": case.case_id,
+                "diverted_hospital_id": hospital_id,
+                "reason_code": reason_code,
+                "reason_description": reason_description,
+                "actor_name": actor_name,
+                "actor_role": actor_role,
+            },
+        )
 
         res = self.calculate_matching(db, case.id, persist_record=True)
         res.status = "DIVERSION_RECORDED"

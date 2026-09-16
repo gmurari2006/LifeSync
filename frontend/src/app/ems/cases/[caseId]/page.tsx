@@ -1,9 +1,12 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEMS } from '@/context/EMSContext';
+import { useCaseWebSocket } from '@/hooks/useCaseWebSocket';
+import { ConnectionStatusBadge } from '@/components/common/ConnectionStatusBadge';
+import { AmbulanceSimulationControlCard } from '@/components/simulation/AmbulanceSimulationControlCard';
 import { CitizenReportCard } from '@/components/ems/CitizenReportCard';
 import { AIStructuredReportCard } from '@/components/ems/AIStructuredReportCard';
 import { EMSVerificationCard } from '@/components/ems/EMSVerificationCard';
@@ -14,6 +17,7 @@ import { HospitalDestinationCard } from '@/components/ems/HospitalDestinationCar
 import { HospitalMatchingCard } from '@/components/ems/HospitalMatchingCard';
 import { EMSTimeline } from '@/components/ems/EMSTimeline';
 import { StatusActionBar } from '@/components/ems/StatusActionBar';
+import { AmbulanceTelemetryState } from '@/types/realtime';
 import { 
   ArrowLeft, 
   AlertCircle, 
@@ -33,9 +37,33 @@ export default function EMSCaseDetailPage({
   params: { caseId: string };
 }) {
   const router = useRouter();
-  const { getCaseById, activeUnit, updateDestination } = useEMS();
+  const { getCaseById, activeUnit, updateDestination, updateVitals } = useEMS();
   const caseId = params.caseId;
   const currentCase = getCaseById(caseId);
+
+  const [liveTelemetry, setLiveTelemetry] = useState<AmbulanceTelemetryState | null>(null);
+
+  // Authoritative REST refresh handler invoked on WebSocket reconnect
+  const handleReloadAuthoritativeState = useCallback(() => {
+    // In full backend integration this triggers REST GET /api/v1/ems/cases/{caseId}
+  }, [caseId]);
+
+  // Real-Time WebSocket Hook
+  const { connectionStatus, isConnected, reconnect } = useCaseWebSocket({
+    caseId,
+    role: 'EMS_PARAMEDIC',
+    onReconnect: handleReloadAuthoritativeState,
+    onEvent: (envelope) => {
+      if (envelope.event_type === 'TELEMETRY_UPDATED' && envelope.payload) {
+        setLiveTelemetry(envelope.payload as unknown as AmbulanceTelemetryState);
+      } else if (envelope.event_type === 'EMS_VITALS_UPDATED' && envelope.payload) {
+        const payload = envelope.payload as { vitals?: any };
+        if (payload.vitals && currentCase) {
+          updateVitals(currentCase.id, payload.vitals);
+        }
+      }
+    },
+  });
 
   if (!currentCase) {
     return (
@@ -72,18 +100,37 @@ export default function EMSCaseDetailPage({
     }
   };
 
+  const hasConfirmedDestination = Boolean(
+    currentCase.destinationHospital?.hospitalId &&
+    currentCase.destinationHospital.hospitalId !== 'HOSP-PENDING'
+  );
+
+  const displayEta = liveTelemetry?.eta_minutes != null
+    ? liveTelemetry.eta_minutes.toFixed(1)
+    : currentCase.etaMinutes;
+
+  const displayDistance = liveTelemetry?.distance_remaining_km != null
+    ? liveTelemetry.distance_remaining_km.toFixed(1)
+    : currentCase.distanceRemainingKm;
+
   return (
     <div className="space-y-6 pb-24">
       
-      {/* Navigation Breadcrumb */}
-      <div className="flex items-center justify-between">
-        <Link
-          href="/ems/cases"
-          className="text-xs text-slate-400 hover:text-white flex items-center gap-1.5 font-bold transition-colors"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          <span>Back to Case Queue</span>
-        </Link>
+      {/* Navigation Breadcrumb & Realtime Status */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <Link
+            href="/ems/cases"
+            className="text-xs text-slate-400 hover:text-white flex items-center gap-1.5 font-bold transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span>Back to Case Queue</span>
+          </Link>
+          <ConnectionStatusBadge
+            status={connectionStatus}
+            onReconnect={reconnect}
+          />
+        </div>
 
         <div className="flex items-center gap-2">
           <Link
@@ -127,10 +174,10 @@ export default function EMSCaseDetailPage({
           <div className="p-3 rounded-2xl bg-slate-950 border border-slate-800 text-right space-y-0.5 shrink-0 self-start md:self-auto">
             <div className="flex items-center md:justify-end gap-1 font-mono font-black text-lg text-amber-300">
               <Clock className="h-4 w-4" />
-              <span>ETA {currentCase.etaMinutes} min</span>
+              <span>ETA {displayEta} min</span>
             </div>
             <p className="text-[11px] text-slate-400 font-mono">
-              {currentCase.distanceRemainingKm} km to {currentCase.destinationHospital.name}
+              {displayDistance} km to {currentCase.destinationHospital.name}
             </p>
           </div>
         </div>
@@ -170,16 +217,16 @@ export default function EMSCaseDetailPage({
           {/* 3. EMS Verification Assessment */}
           <EMSVerificationCard caseId={currentCase.id} verification={currentCase.emsVerification} />
 
-          {/* 3. EMS Verified Vital Signs */}
+          {/* 4. EMS Verified Vital Signs */}
           <VitalsCard caseId={currentCase.id} vitals={currentCase.vitals} />
 
-          {/* 4. Patient Operational Status */}
+          {/* 5. Patient Operational Status */}
           <PatientStatusCard caseId={currentCase.id} patientStatus={currentCase.patientStatus} />
         </div>
 
-        {/* Right Column: Transport, Matching & Receiving Hospital (5 cols) */}
+        {/* Right Column: Transport, Simulation & Receiving Hospital (5 cols) */}
         <div className="lg:col-span-5 space-y-6">
-          {/* 5. Deterministic Hospital Matching & Readiness Intelligence */}
+          {/* 6. Deterministic Hospital Matching & Readiness Intelligence */}
           <HospitalMatchingCard
             caseId={currentCase.id}
             currentDestinationId={currentCase.destinationHospital.hospitalId}
@@ -188,13 +235,23 @@ export default function EMSCaseDetailPage({
             }
           />
 
-          {/* 6. Ambulance & Transport Status Progression */}
+          {/* 7. Real-Time Ambulance Simulation & Telemetry Controls */}
+          <AmbulanceSimulationControlCard
+            caseId={currentCase.id}
+            hasConfirmedDestination={hasConfirmedDestination}
+            destinationHospitalId={currentCase.destinationHospital.hospitalId}
+            destinationHospitalName={currentCase.destinationHospital.name}
+            liveTelemetry={liveTelemetry}
+            onTelemetryUpdate={(tel) => setLiveTelemetry(tel)}
+          />
+
+          {/* 8. Ambulance & Transport Status Progression */}
           <TransportStatusCard caseId={currentCase.id} transportStatus={currentCase.transportStatus} />
 
-          {/* 7. Receiving Hospital Destination Card */}
+          {/* 9. Receiving Hospital Destination Card */}
           <HospitalDestinationCard destination={currentCase.destinationHospital} />
 
-          {/* 8. Emergency Coordination Multi-Actor Timeline */}
+          {/* 10. Emergency Coordination Multi-Actor Timeline */}
           <EMSTimeline events={currentCase.timeline} />
         </div>
 
@@ -208,3 +265,4 @@ export default function EMSCaseDetailPage({
     </div>
   );
 }
+

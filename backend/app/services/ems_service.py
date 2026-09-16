@@ -11,6 +11,8 @@ from app.schemas.ems import (
 )
 from app.services.case_service import get_case_by_identifier, update_case_lifecycle_state
 from app.services.audit_service import create_audit_event
+from app.realtime.events import publish_case_event
+from app.realtime.schemas import RealtimeEventType, ProvenanceSource
 
 
 def list_ems_cases(
@@ -87,6 +89,28 @@ def record_ems_verification(
 
     db.commit()
     db.refresh(ems_ver)
+
+    # Publish delivery-only WebSocket notification
+    publish_case_event(
+        case_id=case.case_id,
+        event_type=RealtimeEventType.EMS_STATUS_UPDATED,
+        source=ProvenanceSource.EMS_VERIFIED,
+        payload={
+            "case_id": case.case_id,
+            "status": case.status,
+            "verification": {
+                "consciousness": ems_ver.consciousness,
+                "breathing": ems_ver.breathing,
+                "bleeding": ems_ver.bleeding,
+                "airway": ems_ver.airway,
+                "clinical_notes": ems_ver.clinical_notes,
+                "verified_by": ems_ver.verified_by,
+                "verified_at": ems_ver.verified_at.isoformat() if ems_ver.verified_at else None,
+                "source": "EMS_VERIFIED",
+            },
+        },
+    )
+
     return ems_ver
 
 
@@ -97,6 +121,7 @@ def record_ems_vitals(
 ) -> EMSVitals:
     """
     Store streamed vital signs with strict EMS_VERIFIED provenance.
+    Order: Validate -> Persist EMS_VERIFIED data -> Create Audit Event -> Broadcast WebSocket Event.
     """
     case = get_case_by_identifier(db, case_identifier)
     if not case:
@@ -142,6 +167,32 @@ def record_ems_vitals(
 
     db.commit()
     db.refresh(ems_vit)
+
+    # Publish delivery-only WebSocket notification
+    publish_case_event(
+        case_id=case.case_id,
+        event_type=RealtimeEventType.EMS_VITALS_UPDATED,
+        source=ProvenanceSource.EMS_VERIFIED,
+        payload={
+            "case_id": case.case_id,
+            "vitals": {
+                "heart_rate": ems_vit.heart_rate,
+                "systolic_bp": ems_vit.systolic_bp,
+                "diastolic_bp": ems_vit.diastolic_bp,
+                "oxygen_saturation": ems_vit.oxygen_saturation,
+                "respiratory_rate": ems_vit.respiratory_rate,
+                "temperature": ems_vit.temperature,
+                "gcs": ems_vit.gcs,
+                "pain_score": ems_vit.pain_score,
+                "blood_glucose": ems_vit.blood_glucose,
+                "recorded_by": ems_vit.recorded_by,
+                "recorded_at": ems_vit.recorded_at.isoformat() if ems_vit.recorded_at else None,
+                "is_verified": True,
+                "source": "EMS_VERIFIED",
+            },
+        },
+    )
+
     return ems_vit
 
 
@@ -154,7 +205,7 @@ def update_transport_status(
     Update paramedic transport status (e.g., ON_SCENE, PATIENT_LOADED, TRANSPORTING, ARRIVED).
     """
     actor_name = status_update.updated_by or "Paramedic Team Alpha"
-    return update_case_lifecycle_state(
+    case = update_case_lifecycle_state(
         db=db,
         case_identifier=case_identifier,
         target_status=status_update.status,
@@ -162,6 +213,19 @@ def update_transport_status(
         actor_name=actor_name,
         notes=f"EMS transport status transitioned to {status_update.status}.",
     )
+
+    publish_case_event(
+        case_id=case.case_id,
+        event_type=RealtimeEventType.EMS_STATUS_UPDATED,
+        source=ProvenanceSource.EMS_VERIFIED,
+        payload={
+            "case_id": case.case_id,
+            "status": case.status,
+            "updated_by": actor_name,
+        },
+    )
+
+    return case
 
 
 def complete_handover(
@@ -202,4 +266,17 @@ def complete_handover(
 
     db.commit()
     db.refresh(case)
+
+    publish_case_event(
+        case_id=case.case_id,
+        event_type=RealtimeEventType.HANDOVER_COMPLETED,
+        source=ProvenanceSource.EMS_VERIFIED,
+        payload={
+            "case_id": case.case_id,
+            "status": case.status,
+            "receiving_staff": handover_data.receiving_staff,
+            "notes": handover_data.notes,
+        },
+    )
+
     return case

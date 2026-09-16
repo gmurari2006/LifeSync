@@ -11,6 +11,8 @@ from app.schemas.hospital import (
 from app.schemas.readiness import ReadinessSummaryResponse
 from app.services.case_service import get_case_by_identifier, update_case_lifecycle_state
 from app.services.audit_service import create_audit_event
+from app.realtime.events import publish_case_event
+from app.realtime.schemas import RealtimeEventType, ProvenanceSource
 
 
 def list_hospitals(db: Session) -> List[Hospital]:
@@ -99,6 +101,35 @@ def acknowledge_incoming_case(
 
     db.commit()
     db.refresh(case)
+
+    # Broadcast hospital acknowledgement
+    publish_case_event(
+        case_id=case.case_id,
+        event_type=RealtimeEventType.HOSPITAL_ACKNOWLEDGED,
+        source=ProvenanceSource.HOSPITAL_VERIFIED,
+        payload={
+            "case_id": case.case_id,
+            "hospital_id": hospital_id,
+            "acknowledged_state": "ACKNOWLEDGED",
+            "assigned_bay": case.assigned_bay,
+            "acknowledged_by": ack_data.acknowledged_by,
+            "notes": ack_data.notes,
+        },
+    )
+
+    # Also broadcast bay assignment if bay specified
+    if ack_data.assigned_bay:
+        publish_case_event(
+            case_id=case.case_id,
+            event_type=RealtimeEventType.BAY_ASSIGNED,
+            source=ProvenanceSource.HOSPITAL_VERIFIED,
+            payload={
+                "case_id": case.case_id,
+                "hospital_id": hospital_id,
+                "assigned_bay": ack_data.assigned_bay,
+            },
+        )
+
     return case
 
 
@@ -143,6 +174,19 @@ def divert_incoming_case(
 
     db.commit()
     db.refresh(case)
+
+    publish_case_event(
+        case_id=case.case_id,
+        event_type=RealtimeEventType.HOSPITAL_DIVERSION_REQUESTED,
+        source=ProvenanceSource.HOSPITAL_VERIFIED,
+        payload={
+            "case_id": case.case_id,
+            "hospital_id": hospital_id,
+            "divert_reason_code": divert_data.divert_reason_code,
+            "divert_notes": divert_data.divert_notes,
+        },
+    )
+
     return case
 
 
