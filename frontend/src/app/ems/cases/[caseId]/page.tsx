@@ -11,6 +11,7 @@ import { VitalsCard } from '@/components/ems/VitalsCard';
 import { PatientStatusCard } from '@/components/ems/PatientStatusCard';
 import { TransportStatusCard } from '@/components/ems/TransportStatusCard';
 import { HospitalDestinationCard } from '@/components/ems/HospitalDestinationCard';
+import { HospitalMatchingCard } from '@/components/ems/HospitalMatchingCard';
 import { EMSTimeline } from '@/components/ems/EMSTimeline';
 import { StatusActionBar } from '@/components/ems/StatusActionBar';
 import { 
@@ -32,7 +33,7 @@ export default function EMSCaseDetailPage({
   params: { caseId: string };
 }) {
   const router = useRouter();
-  const { getCaseById, activeUnit } = useEMS();
+  const { getCaseById, activeUnit, updateDestination } = useEMS();
   const caseId = params.caseId;
   const currentCase = getCaseById(caseId);
 
@@ -176,15 +177,24 @@ export default function EMSCaseDetailPage({
           <PatientStatusCard caseId={currentCase.id} patientStatus={currentCase.patientStatus} />
         </div>
 
-        {/* Right Column: Transport & Receiving Hospital (5 cols) */}
+        {/* Right Column: Transport, Matching & Receiving Hospital (5 cols) */}
         <div className="lg:col-span-5 space-y-6">
-          {/* 5. Ambulance & Transport Status Progression */}
+          {/* 5. Deterministic Hospital Matching & Readiness Intelligence */}
+          <HospitalMatchingCard
+            caseId={currentCase.id}
+            currentDestinationId={currentCase.destinationHospital.hospitalId}
+            onDestinationConfirmed={(hospitalId, hospitalName) =>
+              updateDestination(currentCase.id, hospitalId, hospitalName)
+            }
+          />
+
+          {/* 6. Ambulance & Transport Status Progression */}
           <TransportStatusCard caseId={currentCase.id} transportStatus={currentCase.transportStatus} />
 
-          {/* 6. Receiving Hospital Destination Card */}
+          {/* 7. Receiving Hospital Destination Card */}
           <HospitalDestinationCard destination={currentCase.destinationHospital} />
 
-          {/* 7. Emergency Coordination Multi-Actor Timeline */}
+          {/* 8. Emergency Coordination Multi-Actor Timeline */}
           <EMSTimeline events={currentCase.timeline} />
         </div>
 

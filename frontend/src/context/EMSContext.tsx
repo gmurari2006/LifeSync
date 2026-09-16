@@ -31,6 +31,7 @@ interface EMSContextType {
   updateVerification: (caseId: string, updates: Partial<EMSVerification>) => Promise<void>;
   updateVitals: (caseId: string, vitalsUpdates: Partial<EMSVitals>) => Promise<void>;
   updatePatientStatus: (caseId: string, status: PatientOperationalStatus) => void;
+  updateDestination: (caseId: string, hospitalId: string, hospitalName: string) => void;
   completeHandover: (caseId: string, receivingStaff?: string, notes?: string) => Promise<void>;
   getCaseById: (caseId: string) => EMSCase | undefined;
   isLoading: boolean;
@@ -371,6 +372,38 @@ export function EMSProvider({ children }: { children: ReactNode }) {
     return cases[normalized];
   };
 
+  const updateDestination = (caseId: string, hospitalId: string, hospitalName: string) => {
+    const nowTime = getNowFormatted();
+    setCases(prev => {
+      const current = prev[caseId];
+      if (!current) return prev;
+
+      const newTimelineEvent: EMSTimelineEvent = {
+        id: `t-gen-${Date.now()}`,
+        timestamp: nowTime,
+        relativeTime: 'Just now',
+        title: `Destination Confirmed: ${hospitalName}`,
+        description: `Hospital destination confirmed via deterministic matching recommendation.`,
+        actor: 'EMS',
+        stage: current.transportStatus,
+      };
+
+      return {
+        ...prev,
+        [caseId]: {
+          ...current,
+          destinationHospital: {
+            ...current.destinationHospital,
+            hospitalId: hospitalId,
+            name: hospitalName,
+          },
+          lastUpdated: `${nowTime} (Just now)`,
+          timeline: [newTimelineEvent, ...current.timeline],
+        },
+      };
+    });
+  };
+
   return (
     <EMSContext.Provider
       value={{
@@ -384,6 +417,7 @@ export function EMSProvider({ children }: { children: ReactNode }) {
         updateVerification,
         updateVitals,
         updatePatientStatus,
+        updateDestination,
         completeHandover,
         getCaseById,
         isLoading,

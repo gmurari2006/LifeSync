@@ -4,6 +4,7 @@ from app.models.citizen_report import CitizenReport
 from app.models.ai_report import AIStructuredReport
 from app.models.ems import EMSUnit, EMSVerification, EMSVitals
 from app.models.hospital import Hospital, HospitalResource
+from app.models.hospital_match import HospitalMatchRecord, HospitalDecisionLog
 from app.models.audit import CaseAuditEvent
 
 __all__ = [
@@ -19,5 +20,7 @@ __all__ = [
     "EMSVitals",
     "Hospital",
     "HospitalResource",
+    "HospitalMatchRecord",
+    "HospitalDecisionLog",
     "CaseAuditEvent",
 ]

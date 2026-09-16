@@ -8,6 +8,7 @@ import { PriorityBadge } from '@/components/hospital/PriorityBadge';
 import { StatusBadge } from '@/components/hospital/StatusBadge';
 import { CaseSummaryCard } from '@/components/hospital/CaseSummaryCard';
 import { AIStructuredReportCard } from '@/components/ems/AIStructuredReportCard';
+import { HospitalMatchingCard } from '@/components/ems/HospitalMatchingCard';
 import { EmsStatusCard } from '@/components/hospital/EmsStatusCard';
 import { CaseTimeline } from '@/components/hospital/CaseTimeline';
 import { AcknowledgementModal } from '@/components/hospital/AcknowledgementModal';
@@ -267,8 +268,11 @@ export default function CaseDetailPage() {
           </div>
         </div>
 
-        {/* Right Column: EMS Status & Decision Audit Timeline (5 cols) */}
+        {/* Right Column: Hospital Matching, EMS Status & Decision Audit Timeline (5 cols) */}
         <div className="lg:col-span-5 space-y-6">
+          {/* Deterministic Matching & Diversion Intelligence */}
+          <HospitalMatchingCard caseId={caseData.id} />
+
           {/* EMS Telemetry Card */}
           <EmsStatusCard emsUnit={caseData.emsUnit} />
 

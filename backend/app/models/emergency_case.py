@@ -42,5 +42,7 @@ class EmergencyCase(Base, TimestampMixin):
     ai_reports = relationship("AIStructuredReport", back_populates="case", cascade="all, delete-orphan")
     ems_verifications = relationship("EMSVerification", back_populates="case", cascade="all, delete-orphan")
     ems_vitals = relationship("EMSVitals", back_populates="case", cascade="all, delete-orphan")
+    matching_records = relationship("HospitalMatchRecord", back_populates="case", cascade="all, delete-orphan")
+    decision_logs = relationship("HospitalDecisionLog", back_populates="case", cascade="all, delete-orphan")
     audit_events = relationship("CaseAuditEvent", back_populates="case", cascade="all, delete-orphan")
     destination_hospital = relationship("Hospital", back_populates="assigned_cases")
