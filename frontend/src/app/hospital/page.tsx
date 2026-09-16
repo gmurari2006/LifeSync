@@ -6,6 +6,7 @@ import { useHospital } from '@/context/HospitalContext';
 import { CaseTable } from '@/components/hospital/CaseTable';
 import { ReadinessSummary } from '@/components/hospital/ReadinessSummary';
 import { PriorityBadge } from '@/components/hospital/PriorityBadge';
+import { AlertEscalationBanner } from '@/components/hospital/AlertEscalationBanner';
 import { formatEta } from '@/lib/demo/utils';
 import { 
   Inbox, 
@@ -20,14 +21,22 @@ import {
 } from 'lucide-react';
 
 export default function HospitalOverviewPage() {
-  const { cases, hospitalProfile, stats } = useHospital();
+  const { cases, hospitalProfile, stats, refreshHospitalData } = useHospital();
 
   const activeCases = cases.filter(c => c.status !== 'Closed' && c.status !== 'Diverted');
   const pendingAckCases = activeCases.filter(c => c.status === 'Alerted');
 
   return (
     <div className="space-y-6">
+      {/* Active Pre-Alert Escalation Alerts */}
+      <AlertEscalationBanner
+        hospitalId={hospitalProfile.id}
+        onCaseAcknowledged={() => refreshHospitalData && refreshHospitalData()}
+      />
+
+
       {/* Top Operations Welcome Banner */}
+
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 sm:p-6 rounded-2xl border border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900/90 to-blue-950/30">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">

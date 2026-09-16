@@ -82,8 +82,9 @@ export interface EMSTimelineEvent {
   title: string;
   description: string;
   actor: 'Citizen' | 'EMS' | 'Hospital' | 'System';
-  stage: EMSTransportStatus;
+  stage?: EMSTransportStatus;
 }
+
 
 export interface CitizenReportSummary {
   incidentType: string;

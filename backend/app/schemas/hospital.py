@@ -56,3 +56,25 @@ class HospitalDivertRequest(BaseModel):
     divert_reason_code: str = Field(..., description="Mandatory reason code (e.g. SURGE_CAPACITY, CT_UNAVAILABLE, CATH_LAB_OCCUPIED)")
     divert_notes: Optional[str] = Field(None, description="Detailed diversion justification")
     diverted_by: str = Field("Dr. Sarah Jenkins (ED Lead)", description="ED Lead authorizer")
+
+
+class HospitalSettingsUpdate(BaseModel):
+    operational_status: Optional[str] = Field(None, description="Operational, Degraded, Offline")
+    diversion_active: Optional[bool] = Field(None, description="Global facility diversion status")
+    active_surge_level: Optional[str] = Field(None, description="Normal, Medium, High, Disaster")
+    total_bays: Optional[int] = Field(None, ge=1)
+    available_bays: Optional[int] = Field(None, ge=0)
+
+
+class HospitalBayAllocationRequest(BaseModel):
+    bay_id: str = Field(..., description="Unique ID or name of the bay/resuscitation unit")
+    allocated_by: str = Field("ED Coordinator", description="Name of the hospital staff member")
+    notes: Optional[str] = Field(None, description="Clinical staging remarks")
+
+
+class HospitalReadinessChecklistUpdateRequest(BaseModel):
+    checklist_item: str = Field(..., description="e.g. Trauma Team Alerted, Resus Bay Prepared, Blood Bank Standby, Cath-Lab Specialist Paged")
+    is_completed: bool = Field(..., description="Completion state of the readiness item")
+    updated_by: str = Field("ED Coordinator", description="Name of the hospital staff member")
+    notes: Optional[str] = Field(None, description="Optional notes")
+

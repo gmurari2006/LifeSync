@@ -11,11 +11,60 @@ import {
   CheckCircle2 
 } from 'lucide-react';
 
+import { getCaseAuditTimeline } from '@/lib/api/audit';
+import { CaseAuditEventItem } from '@/types/audit';
+
 interface EMSTimelineProps {
-  events: EMSTimelineEvent[];
+  events?: EMSTimelineEvent[];
+  caseId?: string;
 }
 
-export function EMSTimeline({ events }: EMSTimelineProps) {
+
+export function EMSTimeline({ events: initialEvents, caseId }: EMSTimelineProps) {
+  const [liveEvents, setLiveEvents] = React.useState<EMSTimelineEvent[]>(initialEvents || []);
+
+  React.useEffect(() => {
+    if (initialEvents && initialEvents.length > 0) {
+      setLiveEvents(initialEvents);
+    }
+  }, [initialEvents]);
+
+  React.useEffect(() => {
+    if (caseId) {
+      getCaseAuditTimeline(caseId)
+        .then((res) => {
+          if (res.events && res.events.length > 0) {
+            const mapped: EMSTimelineEvent[] = res.events.map((e) => {
+              const dt = new Date(e.timestamp);
+              const formattedTime = dt.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false,
+              });
+              let actorRole: 'Citizen' | 'EMS' | 'Hospital' | 'System' = 'System';
+              if (e.actor_type === 'CITIZEN') actorRole = 'Citizen';
+              else if (e.actor_type === 'EMS') actorRole = 'EMS';
+              else if (e.actor_type === 'HOSPITAL') actorRole = 'Hospital';
+
+              return {
+                id: e.id,
+                timestamp: formattedTime,
+                relativeTime: `${Math.max(0, Math.round((Date.now() - dt.getTime()) / 60000))}m ago`,
+                actor: actorRole,
+                title: e.title,
+                description: e.description,
+              };
+            });
+            setLiveEvents(mapped);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [caseId]);
+
+  const displayEvents = liveEvents.length > 0 ? liveEvents : initialEvents || [];
+
   const getActorBadge = (actor: string) => {
     switch (actor) {
       case 'Citizen':
@@ -60,13 +109,14 @@ export function EMSTimeline({ events }: EMSTimelineProps) {
         </div>
 
         <span className="text-[11px] font-mono text-slate-400">
-          {events.length} Events Logged
+          {displayEvents.length} Events Logged
         </span>
       </div>
 
       {/* Timeline items */}
       <div className="relative pl-6 space-y-4 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-800">
-        {events.map((ev, index) => {
+        {displayEvents.map((ev, index) => {
+
           const actorBadge = getActorBadge(ev.actor);
           return (
             <div key={ev.id || index} className="relative space-y-1">

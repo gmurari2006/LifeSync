@@ -17,6 +17,7 @@ import { HospitalDestinationCard } from '@/components/ems/HospitalDestinationCar
 import { HospitalMatchingCard } from '@/components/ems/HospitalMatchingCard';
 import { EMSTimeline } from '@/components/ems/EMSTimeline';
 import { StatusActionBar } from '@/components/ems/StatusActionBar';
+import { HumanOverrideModal } from '@/components/common/HumanOverrideModal';
 import { AmbulanceTelemetryState } from '@/types/realtime';
 import { 
   ArrowLeft, 
@@ -28,7 +29,8 @@ import {
   Users, 
   Radio, 
   Navigation,
-  FileCheck
+  FileCheck,
+  Sliders
 } from 'lucide-react';
 
 export default function EMSCaseDetailPage({
@@ -42,6 +44,8 @@ export default function EMSCaseDetailPage({
   const currentCase = getCaseById(caseId);
 
   const [liveTelemetry, setLiveTelemetry] = useState<AmbulanceTelemetryState | null>(null);
+  const [isOverrideModalOpen, setIsOverrideModalOpen] = useState(false);
+
 
   // Authoritative REST refresh handler invoked on WebSocket reconnect
   const handleReloadAuthoritativeState = useCallback(() => {
@@ -133,6 +137,13 @@ export default function EMSCaseDetailPage({
         </div>
 
         <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsOverrideModalOpen(true)}
+            className="px-3 py-1.5 rounded-xl border border-amber-500/40 bg-amber-950/40 hover:bg-amber-900/50 text-amber-300 text-xs font-bold flex items-center gap-1.5 transition-all"
+          >
+            <Sliders className="h-3.5 w-3.5 text-amber-400" />
+            <span>Override</span>
+          </button>
           <Link
             href="/ems/handover"
             className="px-3 py-1.5 rounded-xl border border-slate-800 bg-slate-900/80 hover:bg-slate-800 text-slate-300 text-xs font-bold flex items-center gap-1.5 transition-all"
@@ -252,7 +263,7 @@ export default function EMSCaseDetailPage({
           <HospitalDestinationCard destination={currentCase.destinationHospital} />
 
           {/* 10. Emergency Coordination Multi-Actor Timeline */}
-          <EMSTimeline events={currentCase.timeline} />
+          <EMSTimeline events={currentCase.timeline} caseId={currentCase.id} />
         </div>
 
       </div>
@@ -262,7 +273,20 @@ export default function EMSCaseDetailPage({
         <StatusActionBar currentCase={currentCase} />
       </div>
 
+      {/* Human Override Modal */}
+      <HumanOverrideModal
+        isOpen={isOverrideModalOpen}
+        onClose={() => setIsOverrideModalOpen(false)}
+        caseId={currentCase.id}
+        currentPriority={currentCase.operationalPriority}
+        currentDestinationId={currentCase.destinationHospital.hospitalId}
+        userRole="EMS_PARAMEDIC"
+        userName="Paramedic Lead (ALS-04)"
+        userId="EMS-PARAMEDIC-04"
+      />
+
     </div>
   );
 }
+
 

@@ -11,12 +11,64 @@ import {
   ShieldAlert 
 } from 'lucide-react';
 
+import { getCaseAuditTimeline } from '@/lib/api/audit';
+import { CaseAuditEventItem } from '@/types/audit';
+
 interface CaseTimelineProps {
-  events: TimelineEvent[];
+  events?: TimelineEvent[];
+  caseId?: string;
 }
 
-export function CaseTimeline({ events }: CaseTimelineProps) {
+export function CaseTimeline({ events: initialEvents, caseId }: CaseTimelineProps) {
+  const [liveEvents, setLiveEvents] = React.useState<TimelineEvent[]>(initialEvents || []);
+
+  React.useEffect(() => {
+    if (initialEvents && initialEvents.length > 0) {
+      setLiveEvents(initialEvents);
+    }
+  }, [initialEvents]);
+
+  React.useEffect(() => {
+    if (caseId) {
+      getCaseAuditTimeline(caseId)
+        .then((res) => {
+          if (res.events && res.events.length > 0) {
+            const mapped: TimelineEvent[] = res.events.map((e) => {
+              const dt = new Date(e.timestamp);
+              const formattedTime = dt.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false,
+              });
+              let eventType: TimelineEvent['type'] = 'system';
+              if (e.actor_type === 'CITIZEN') eventType = 'bystander';
+              else if (e.actor_type === 'EMS') eventType = 'ems';
+              else if (e.actor_type === 'HOSPITAL') eventType = 'hospital';
+
+              return {
+                id: e.id,
+                timestamp: formattedTime,
+                relativeTime: `${Math.max(0, Math.round((Date.now() - dt.getTime()) / 60000))}m ago`,
+                type: eventType,
+                title: e.title,
+                description: e.description,
+                actor: e.actor_name,
+                actorRole: e.actor_type,
+                stage: (e.new_state as any) || 'HOSPITAL_ALERTED',
+              };
+            });
+            setLiveEvents(mapped);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [caseId]);
+
+  const displayEvents = liveEvents.length > 0 ? liveEvents : initialEvents || [];
+
   const getActorIcon = (type: TimelineEvent['type']) => {
+
     switch (type) {
       case 'hospital':
         return <Building2 className="h-3.5 w-3.5 text-blue-400" />;
@@ -40,12 +92,12 @@ export function CaseTimeline({ events }: CaseTimelineProps) {
           </h3>
         </div>
         <span className="text-[11px] text-slate-400 font-mono">
-          {events.length} Recorded Events
+          {displayEvents.length} Recorded Events
         </span>
       </div>
 
       <div className="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-[2px] before:bg-slate-800">
-        {events.map((evt, idx) => (
+        {displayEvents.map((evt, idx) => (
           <div key={evt.id || idx} className="relative group">
             {/* Timeline node icon */}
             <div className="absolute -left-6 top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-slate-900 border border-slate-700">

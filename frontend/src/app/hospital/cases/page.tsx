@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { useHospital } from '@/context/HospitalContext';
 import { CaseTable } from '@/components/hospital/CaseTable';
 import { CaseCard } from '@/components/hospital/CaseCard';
+import { AlertEscalationBanner } from '@/components/hospital/AlertEscalationBanner';
 import { OperationalPriority, CaseStatus } from '@/types/hospital';
 import { 
   Search, 
@@ -16,7 +17,8 @@ import {
 } from 'lucide-react';
 
 export default function CasesQueuePage() {
-  const { cases, stats } = useHospital();
+  const { cases, stats, hospitalProfile, refreshHospitalData } = useHospital();
+
   
   const [searchTerm, setSearchTerm] = useState('');
   const [priorityFilter, setPriorityFilter] = useState<string>('ALL');
@@ -99,8 +101,16 @@ export default function CasesQueuePage() {
 
   return (
     <div className="space-y-6">
+      {/* Alert Escalation Banner */}
+      <AlertEscalationBanner
+        hospitalId={hospitalProfile.id}
+        onCaseAcknowledged={() => refreshHospitalData && refreshHospitalData()}
+      />
+
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+
         <div>
           <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
             <Inbox className="h-5 w-5 text-blue-400" />

@@ -235,7 +235,8 @@ def complete_handover(
 ) -> EmergencyCase:
     """
     Formal clinical sign-off and transfer of care at the receiving hospital.
-    Transitions lifecycle state to HANDOVER_COMPLETE.
+    Transitions lifecycle state to HANDOVER_COMPLETE and archives the session as CLOSED.
+    Simulates ephemeral caller audio buffer auto-purge (PRD Section 9).
     """
     case = get_case_by_identifier(db, case_identifier)
     if not case:
@@ -261,6 +262,8 @@ def complete_handover(
         event_metadata={
             "receiving_staff": handover_data.receiving_staff,
             "notes": handover_data.notes,
+            "audio_buffer_purged": True,
+            "audio_purge_reason": "Ephemeral intake audio buffer auto-purged post-handover (PRD Section 9)",
         },
     )
 
@@ -276,7 +279,9 @@ def complete_handover(
             "status": case.status,
             "receiving_staff": handover_data.receiving_staff,
             "notes": handover_data.notes,
+            "audio_buffer_purged": True,
         },
     )
 
     return case
+

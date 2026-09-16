@@ -2,6 +2,8 @@
 
 import React from 'react';
 import { useHospital } from '@/context/HospitalContext';
+
+import { HospitalSettingsCard } from '@/components/hospital/HospitalSettingsCard';
 import { 
   Building2, 
   Phone, 
@@ -15,7 +17,7 @@ import {
 } from 'lucide-react';
 
 export default function HospitalSettingsPage() {
-  const { hospitalProfile, toggleDiversion, stats } = useHospital();
+  const { hospitalProfile, toggleDiversion, stats, refreshHospitalData } = useHospital();
 
   return (
     <div className="space-y-6">
@@ -30,7 +32,17 @@ export default function HospitalSettingsPage() {
         </p>
       </div>
 
+      {/* Live Backend Settings Control Card */}
+      <HospitalSettingsCard
+        hospitalId={hospitalProfile.id}
+        initialOperationalStatus={hospitalProfile.operationalStatus}
+        initialDiversionActive={hospitalProfile.diversionActive}
+        onSettingsUpdated={() => refreshHospitalData && refreshHospitalData()}
+      />
+
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
         {/* Left Column: Facility Profile (7 cols) */}
         <div className="lg:col-span-7 space-y-6">
           {/* Facility Identity Card */}

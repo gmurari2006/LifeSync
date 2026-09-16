@@ -246,3 +246,153 @@ def update_hospital_resource(
     db.commit()
     db.refresh(resource)
     return resource
+
+
+def allocate_bay_to_case(
+    db: Session,
+    hospital_id: str,
+    case_identifier: str,
+    allocation_data: HospitalBayAllocationRequest,
+) -> EmergencyCase:
+    """
+    Allocates an available resuscitation or emergency bay to an inbound case.
+    Prevents assignment if bay is Occupied, Cleaning, or Unavailable (Conflict Prevention).
+    """
+    case = get_case_by_identifier(db, case_identifier)
+    if not case:
+        raise ValueError(f"Emergency case '{case_identifier}' not found.")
+
+    resource = db.query(HospitalResource).filter(
+        HospitalResource.hospital_id == hospital_id,
+        (HospitalResource.id == allocation_data.bay_id) | (HospitalResource.name == allocation_data.bay_id),
+    ).first()
+
+    if not resource:
+        raise ValueError(f"Hospital resource '{allocation_data.bay_id}' not found at {hospital_id}.")
+
+    # Conflict Prevention check
+    if resource.status.lower() in ("occupied", "cleaning", "unavailable", "maintenance") or resource.available_capacity <= 0:
+        raise ValueError(
+            f"Resource '{resource.name}' cannot be assigned: currently '{resource.status}' with available capacity {resource.available_capacity}."
+        )
+
+    # Reserve the bay
+    resource.status = "Occupied"
+    resource.available_capacity = 0
+    resource.assigned_case_id = case.case_id
+    resource.last_updated = "Just now"
+
+    case.assigned_bay = resource.name
+
+    create_audit_event(
+        db=db,
+        case_id=case.id,
+        event_type="BAY_ASSIGNED",
+        actor_type="HOSPITAL",
+        actor_name=allocation_data.allocated_by,
+        title="Emergency Bay Allocated",
+        description=f"Allocated {resource.name} ({resource.category}) at {resource.location} to {case.case_id}. Notes: {allocation_data.notes or 'None'}.",
+        event_metadata={
+            "hospital_id": hospital_id,
+            "resource_id": resource.id,
+            "resource_name": resource.name,
+            "allocated_by": allocation_data.allocated_by,
+            "notes": allocation_data.notes,
+        },
+    )
+
+    db.commit()
+    db.refresh(case)
+
+    publish_case_event(
+        case_id=case.case_id,
+        event_type=RealtimeEventType.BAY_ASSIGNED,
+        source=ProvenanceSource.HOSPITAL_VERIFIED,
+        payload={
+            "case_id": case.case_id,
+            "hospital_id": hospital_id,
+            "assigned_bay": resource.name,
+            "resource_id": resource.id,
+            "allocated_by": allocation_data.allocated_by,
+        },
+    )
+
+    return case
+
+
+def update_readiness_checklist(
+    db: Session,
+    hospital_id: str,
+    case_identifier: str,
+    checklist_data: HospitalReadinessChecklistUpdateRequest,
+) -> EmergencyCase:
+    """
+    Updates operational readiness checklist task and logs audit event.
+    """
+    case = get_case_by_identifier(db, case_identifier)
+    if not case:
+        raise ValueError(f"Emergency case '{case_identifier}' not found.")
+
+    create_audit_event(
+        db=db,
+        case_id=case.id,
+        event_type="READINESS_CHECKLIST_UPDATED",
+        actor_type="HOSPITAL",
+        actor_name=checklist_data.updated_by,
+        title=f"Readiness Task: {checklist_data.checklist_item}",
+        description=f"{checklist_data.updated_by} marked '{checklist_data.checklist_item}' as {'Completed' if checklist_data.is_completed else 'Pending'}. Notes: {checklist_data.notes or 'None'}.",
+        event_metadata={
+            "hospital_id": hospital_id,
+            "checklist_item": checklist_data.checklist_item,
+            "is_completed": checklist_data.is_completed,
+            "updated_by": checklist_data.updated_by,
+            "notes": checklist_data.notes,
+        },
+    )
+
+    db.commit()
+    db.refresh(case)
+
+    publish_case_event(
+        case_id=case.case_id,
+        event_type=RealtimeEventType.HOSPITAL_READINESS_UPDATED,
+        source=ProvenanceSource.HOSPITAL_VERIFIED,
+        payload={
+            "case_id": case.case_id,
+            "hospital_id": hospital_id,
+            "checklist_item": checklist_data.checklist_item,
+            "is_completed": checklist_data.is_completed,
+            "updated_by": checklist_data.updated_by,
+        },
+    )
+
+    return case
+
+
+def update_hospital_settings(
+    db: Session,
+    hospital_id: str,
+    settings: HospitalSettingsUpdate,
+) -> Optional[Hospital]:
+    """
+    Updates hospital operational capacity, diversion status, and surge level for demo scenarios.
+    """
+    hospital = get_hospital_by_id(db, hospital_id)
+    if not hospital:
+        return None
+
+    if settings.operational_status is not None:
+        hospital.operational_status = settings.operational_status
+    if settings.diversion_active is not None:
+        hospital.diversion_active = settings.diversion_active
+    if settings.active_surge_level is not None:
+        hospital.active_surge_level = settings.active_surge_level
+    if settings.total_bays is not None:
+        hospital.total_bays = settings.total_bays
+    if settings.available_bays is not None:
+        hospital.available_bays = settings.available_bays
+
+    db.commit()
+    db.refresh(hospital)
+    return hospital
+

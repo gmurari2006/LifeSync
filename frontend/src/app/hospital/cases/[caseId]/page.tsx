@@ -16,6 +16,8 @@ import { EmsStatusCard } from '@/components/hospital/EmsStatusCard';
 import { CaseTimeline } from '@/components/hospital/CaseTimeline';
 import { AcknowledgementModal } from '@/components/hospital/AcknowledgementModal';
 import { DivertModal } from '@/components/hospital/DivertModal';
+import { HumanOverrideModal } from '@/components/common/HumanOverrideModal';
+import { allocateHospitalBay, updateCaseReadinessChecklist } from '@/lib/api/hospitals';
 import { formatEta } from '@/lib/demo/utils';
 import { AmbulanceTelemetryState } from '@/types/realtime';
 import { 
@@ -27,7 +29,8 @@ import {
   ShieldCheck, 
   AlertTriangle,
   UserCheck,
-  CheckSquare
+  CheckSquare,
+  Sliders
 } from 'lucide-react';
 
 export default function CaseDetailPage() {
@@ -49,8 +52,11 @@ export default function CaseDetailPage() {
 
   const [isAckModalOpen, setIsAckModalOpen] = useState(false);
   const [isDivertModalOpen, setIsDivertModalOpen] = useState(false);
+  const [isOverrideModalOpen, setIsOverrideModalOpen] = useState(false);
   const [selectedBay, setSelectedBay] = useState('');
+  const [bayError, setBayError] = useState<string | null>(null);
   const [liveTelemetry, setLiveTelemetry] = useState<AmbulanceTelemetryState | null>(null);
+
 
   // Authoritative REST refresh callback for WebSocket reconnect
   const handleReloadAuthoritativeState = useCallback(() => {
@@ -96,14 +102,38 @@ export default function CaseDetailPage() {
     r => (r.category === 'Emergency Bay' || r.category === 'Resuscitation Unit') && r.status === 'Ready'
   );
 
-  const handleBaySelect = (bayId: string) => {
+  const handleBaySelect = async (bayId: string) => {
     setSelectedBay(bayId);
+    setBayError(null);
     if (bayId) {
-      assignBayToCase(caseData.id, bayId);
+      try {
+        await allocateHospitalBay(hospitalProfile.id, caseData.id, {
+          bay_id: bayId,
+          allocated_by: hospitalProfile.onDutyCoordinator,
+          notes: 'Bay staged via Emergency Readiness Portal',
+        });
+        assignBayToCase(caseData.id, bayId);
+      } catch (err: any) {
+        setBayError(err?.message || 'Failed to allocate bay. It may be currently occupied or cleaning.');
+      }
+    }
+  };
+
+  const handleChecklistToggle = async (itemId: string, itemLabel: string, currentStatus: boolean) => {
+    toggleChecklistItem(caseData.id, itemId);
+    try {
+      await updateCaseReadinessChecklist(hospitalProfile.id, caseData.id, {
+        checklist_item: itemLabel,
+        is_completed: !currentStatus,
+        updated_by: hospitalProfile.onDutyCoordinator,
+      });
+    } catch {
+      // Background sync
     }
   };
 
   const displayEta = liveTelemetry?.eta_minutes != null
+
     ? `${liveTelemetry.eta_minutes.toFixed(1)}m`
     : formatEta(caseData.emsUnit.etaMinutes);
 
@@ -185,6 +215,13 @@ export default function CaseDetailPage() {
 
         {/* Dynamic Action Area */}
         <div className="pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
+          {bayError && (
+            <div className="w-full p-2.5 bg-rose-950/40 border border-rose-500/30 rounded-xl text-rose-300 text-xs flex items-center gap-2">
+              <span>⚠️</span>
+              <span>{bayError}</span>
+            </div>
+          )}
+
           {isAlerted && (
             <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
               <button
@@ -247,6 +284,17 @@ export default function CaseDetailPage() {
               </div>
             </div>
           )}
+
+          {/* Operational Override Button */}
+          <div className="flex justify-end w-full pt-1">
+            <button
+              onClick={() => setIsOverrideModalOpen(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 text-xs font-semibold transition"
+            >
+              <Sliders className="h-3.5 w-3.5 text-amber-400" />
+              <span>Record Human Clinical Override</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -287,7 +335,7 @@ export default function CaseDetailPage() {
                   <input
                     type="checkbox"
                     checked={item.completed}
-                    onChange={() => toggleChecklistItem(caseData.id, item.id)}
+                    onChange={() => handleChecklistToggle(item.id, item.label, item.completed)}
                     className="mt-0.5 accent-emerald-500 h-4 w-4 rounded"
                   />
                   <div className="space-y-0.5">
@@ -323,7 +371,7 @@ export default function CaseDetailPage() {
           <EmsStatusCard emsUnit={caseData.emsUnit} />
 
           {/* Chronological Audit Timeline */}
-          <CaseTimeline events={caseData.timeline} />
+          <CaseTimeline events={caseData.timeline} caseId={caseData.id} />
         </div>
       </div>
 
@@ -345,6 +393,18 @@ export default function CaseDetailPage() {
         caseId={caseData.id}
         incidentType={caseData.incidentType}
       />
+
+      <HumanOverrideModal
+        isOpen={isOverrideModalOpen}
+        onClose={() => setIsOverrideModalOpen(false)}
+        caseId={caseData.id}
+        currentPriority={caseData.operationalPriority}
+        currentDestinationId={caseData.destinationHospitalId || hospitalProfile.id}
+        userRole="ED_COORDINATOR"
+        userName={hospitalProfile.onDutyCoordinator}
+        userId="ED-COORD-01"
+      />
+
     </div>
   );
 }

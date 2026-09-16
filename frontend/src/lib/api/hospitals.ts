@@ -81,3 +81,65 @@ export async function patchHospitalResource(
     }
   );
 }
+
+export interface HospitalBayAllocationPayload {
+  bay_id: string;
+  allocated_by?: string;
+  notes?: string;
+}
+
+export async function allocateHospitalBay(
+  hospitalId: string,
+  caseId: string,
+  payload: HospitalBayAllocationPayload
+) {
+  return apiClient<any>(
+    `/api/v1/hospitals/${hospitalId}/cases/${caseId}/bay`,
+    {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }
+  );
+}
+
+export interface HospitalReadinessChecklistPayload {
+  checklist_item: string;
+  is_completed: boolean;
+  updated_by?: string;
+  notes?: string;
+}
+
+export async function updateCaseReadinessChecklist(
+  hospitalId: string,
+  caseId: string,
+  payload: HospitalReadinessChecklistPayload
+) {
+  return apiClient<any>(
+    `/api/v1/hospitals/${hospitalId}/cases/${caseId}/ready`,
+    {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }
+  );
+}
+
+export interface HospitalSettingsUpdatePayload {
+  operational_status?: string;
+  diversion_active?: boolean;
+  active_surge_level?: string;
+  diversion_reason?: string;
+}
+
+export async function updateHospitalSettings(
+  hospitalId: string,
+  payload: HospitalSettingsUpdatePayload
+) {
+  return apiClient<any>(
+    `/api/v1/hospitals/${hospitalId}/settings`,
+    {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    }
+  );
+}
+
