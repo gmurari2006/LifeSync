@@ -7,6 +7,7 @@ import { useHospital } from '@/context/HospitalContext';
 import { PriorityBadge } from '@/components/hospital/PriorityBadge';
 import { StatusBadge } from '@/components/hospital/StatusBadge';
 import { CaseSummaryCard } from '@/components/hospital/CaseSummaryCard';
+import { AIStructuredReportCard } from '@/components/ems/AIStructuredReportCard';
 import { EmsStatusCard } from '@/components/hospital/EmsStatusCard';
 import { CaseTimeline } from '@/components/hospital/CaseTimeline';
 import { AcknowledgementModal } from '@/components/hospital/AcknowledgementModal';
@@ -216,6 +217,9 @@ export default function CaseDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column: Structured Pre-Arrival Clinical Packet (7 cols) */}
         <div className="lg:col-span-7 space-y-6">
+          {/* AI Structured Information Layer */}
+          <AIStructuredReportCard caseId={caseData.id} />
+
           {/* Clinical Findings Packet */}
           <CaseSummaryCard caseData={caseData} />
 

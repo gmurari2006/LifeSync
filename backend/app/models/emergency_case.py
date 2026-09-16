@@ -39,6 +39,7 @@ class EmergencyCase(Base, TimestampMixin):
 
     # Relationships
     citizen_reports = relationship("CitizenReport", back_populates="case", cascade="all, delete-orphan")
+    ai_reports = relationship("AIStructuredReport", back_populates="case", cascade="all, delete-orphan")
     ems_verifications = relationship("EMSVerification", back_populates="case", cascade="all, delete-orphan")
     ems_vitals = relationship("EMSVitals", back_populates="case", cascade="all, delete-orphan")
     audit_events = relationship("CaseAuditEvent", back_populates="case", cascade="all, delete-orphan")

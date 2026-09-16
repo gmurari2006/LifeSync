@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEMS } from '@/context/EMSContext';
 import { CitizenReportCard } from '@/components/ems/CitizenReportCard';
+import { AIStructuredReportCard } from '@/components/ems/AIStructuredReportCard';
 import { EMSVerificationCard } from '@/components/ems/EMSVerificationCard';
 import { VitalsCard } from '@/components/ems/VitalsCard';
 import { PatientStatusCard } from '@/components/ems/PatientStatusCard';
@@ -162,7 +163,10 @@ export default function EMSCaseDetailPage({
           {/* 1. Citizen Reported Info */}
           <CitizenReportCard citizenReport={currentCase.citizenReport} />
 
-          {/* 2. EMS Verification Assessment */}
+          {/* 2. AI Structured Information Layer */}
+          <AIStructuredReportCard caseId={currentCase.id} />
+
+          {/* 3. EMS Verification Assessment */}
           <EMSVerificationCard caseId={currentCase.id} verification={currentCase.emsVerification} />
 
           {/* 3. EMS Verified Vital Signs */}

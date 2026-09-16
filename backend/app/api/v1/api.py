@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.v1.endpoints import health, cases, citizen, ems, hospitals, readiness
+from app.api.v1.endpoints import health, cases, citizen, ems, hospitals, readiness, ai
 
 api_router = APIRouter()
 
@@ -10,3 +10,4 @@ api_router.include_router(citizen.router, prefix="/citizen", tags=["Citizen Port
 api_router.include_router(ems.router, prefix="/ems", tags=["EMS Portal"])
 api_router.include_router(hospitals.router, prefix="/hospitals", tags=["Hospital Portal"])
 api_router.include_router(readiness.router, prefix="/hospitals", tags=["Hospital Readiness"])
+api_router.include_router(ai.router, prefix="/ai", tags=["AI Structuring Layer"])

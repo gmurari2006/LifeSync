@@ -5,6 +5,7 @@ from app.models.hospital import Hospital, HospitalResource
 from app.models.ems import EMSUnit, EMSVerification, EMSVitals
 from app.models.emergency_case import EmergencyCase
 from app.models.citizen_report import CitizenReport
+from app.models.ai_report import AIStructuredReport
 from app.models.audit import CaseAuditEvent
 from app.models.base import utc_now
 
@@ -510,6 +511,142 @@ def seed_database(db: Session) -> None:
             event_metadata={"people_count": 1},
         )
         db.add(audit_4)
+
+    # 5. Seed AI Structured Reports for Baseline Cases if not present
+    existing_ai_reports = db.query(AIStructuredReport).count()
+    if existing_ai_reports == 0:
+        c1 = db.query(EmergencyCase).filter(EmergencyCase.case_id == "LS-2026-001").first()
+        c2 = db.query(EmergencyCase).filter(EmergencyCase.case_id == "LS-2026-002").first()
+        c3 = db.query(EmergencyCase).filter(EmergencyCase.case_id == "LS-2026-003").first()
+        c4 = db.query(EmergencyCase).filter(EmergencyCase.case_id == "LS-2026-101").first()
+
+        now = utc_now()
+        nine_mins_ago = now - datetime.timedelta(minutes=9)
+        fourteen_mins_ago = now - datetime.timedelta(minutes=14)
+        nineteen_mins_ago = now - datetime.timedelta(minutes=19)
+        three_mins_ago = now - datetime.timedelta(minutes=3)
+
+        if c1:
+            cr1 = db.query(CitizenReport).filter(CitizenReport.case_id == c1.id).first()
+            ai_1 = AIStructuredReport(
+                case_id=c1.id,
+                citizen_report_id=cr1.id if cr1 else c1.id,
+                incident_summary="Reported Severe Multi-Vehicle Collision involving 1 person. Initial bystander status: consciousness reported as 'Unresponsive', breathing reported as 'Difficulty Breathing'. Observed concerns include: Heavy vehicle damage, Severe Bleeding Observed, Trapped / Vehicle Extrication Required.",
+                incident_category="TRAUMA_MVA",
+                people_count=1,
+                consciousness="Unresponsive",
+                breathing="Difficulty Breathing",
+                visible_concerns=["Heavy vehicle damage", "Severe Bleeding Observed", "Vehicle Extrication Required", "Head Trauma Suspected"],
+                location_summary="Interstate 95, Exit 42 Northbound (Near: Mile Marker 42.5 overpass)",
+                extracted_keywords=["accident", "pinned", "bleeding", "unconscious", "head", "injury", "highway"],
+                uncertainty_flags=["Bystander expresses uncertainty about patient responsiveness depth"],
+                missing_information=["Definitive responsiveness check pending EMS arrival", "Accurate respiratory rate and airway assessment"],
+                confidence_score=0.88,
+                source="AI_STRUCTURED",
+                model_name="lifesync-nlp-local-v1",
+                model_version="1.2.0",
+                prompt_version="v1.2",
+                status="COMPLETED",
+                structured_payload={
+                    "incident_summary": "Reported Severe Multi-Vehicle Collision involving 1 person.",
+                    "incident_category": "TRAUMA_MVA",
+                    "people_count": 1,
+                    "consciousness": "Unresponsive",
+                    "breathing": "Difficulty Breathing",
+                    "confidence_score": 0.88,
+                },
+                generated_at=nine_mins_ago,
+            )
+            audit_ai_1 = CaseAuditEvent(
+                case_id=c1.id,
+                timestamp=nine_mins_ago,
+                event_type="AI_STRUCTURING_COMPLETED",
+                actor_type="SYSTEM",
+                actor_name="AI Engine (lifesync-nlp-local-v1)",
+                title="AI Structured Emergency Report Created",
+                description="Automated information structuring completed with extraction confidence 0.88.",
+                new_state=c1.status,
+                event_metadata={"model_version": "1.2.0", "confidence_score": 0.88, "source": "AI_STRUCTURED"},
+            )
+            db.add_all([ai_1, audit_ai_1])
+
+        if c2:
+            cr2 = db.query(CitizenReport).filter(CitizenReport.case_id == c2.id).first()
+            ai_2 = AIStructuredReport(
+                case_id=c2.id,
+                citizen_report_id=cr2.id if cr2 else c2.id,
+                incident_summary="Reported Cardiac Chest Pain involving 1 person. Initial bystander status: consciousness reported as 'Responding', breathing reported as 'Difficulty Breathing'. Observed concerns include: Reported Chest Discomfort, Diaphoresis / Heavy Sweating.",
+                incident_category="CARDIAC_CHEST_PAIN",
+                people_count=1,
+                consciousness="Responding",
+                breathing="Difficulty Breathing",
+                visible_concerns=["Reported Chest Discomfort", "Diaphoresis / Heavy Sweating", "Shortness of Breath"],
+                location_summary="742 Evergreen Terrace",
+                extracted_keywords=["chest", "pressure", "sweating", "pain", "breathing"],
+                uncertainty_flags=["Visual assessment is approximate / unverified by medical personnel"],
+                missing_information=["12-Lead ECG confirmation pending EMS evaluation"],
+                confidence_score=0.92,
+                source="AI_STRUCTURED",
+                model_name="lifesync-nlp-local-v1",
+                model_version="1.2.0",
+                prompt_version="v1.2",
+                status="COMPLETED",
+                structured_payload={"incident_category": "CARDIAC_CHEST_PAIN", "confidence_score": 0.92},
+                generated_at=fourteen_mins_ago,
+            )
+            db.add(ai_2)
+
+        if c3:
+            cr3 = db.query(CitizenReport).filter(CitizenReport.case_id == c3.id).first()
+            ai_3 = AIStructuredReport(
+                case_id=c3.id,
+                citizen_report_id=cr3.id if cr3 else c3.id,
+                incident_summary="Reported Neurological Deficit involving 1 person. Initial bystander status: consciousness reported as 'Responding', breathing reported as 'Normal'. Observed concerns include: Facial asymmetry, Arm weakness, Speech difficulty.",
+                incident_category="NEUROLOGICAL_DEFICIT",
+                people_count=1,
+                consciousness="Responding",
+                breathing="Normal",
+                visible_concerns=["Facial asymmetry", "Arm weakness", "Slurred speech"],
+                location_summary="1204 Pine Ridge Road",
+                extracted_keywords=["droop", "weakness", "speech", "stroke"],
+                uncertainty_flags=["Last known well time approximate based on caller narrative"],
+                missing_information=["Exact stroke onset timeline verification"],
+                confidence_score=0.90,
+                source="AI_STRUCTURED",
+                model_name="lifesync-nlp-local-v1",
+                model_version="1.2.0",
+                prompt_version="v1.2",
+                status="COMPLETED",
+                structured_payload={"incident_category": "NEUROLOGICAL_DEFICIT", "confidence_score": 0.90},
+                generated_at=nineteen_mins_ago,
+            )
+            db.add(ai_3)
+
+        if c4:
+            cr4 = db.query(CitizenReport).filter(CitizenReport.case_id == c4.id).first()
+            ai_4 = AIStructuredReport(
+                case_id=c4.id,
+                citizen_report_id=cr4.id if cr4 else c4.id,
+                incident_summary="Reported Pedestrian Struck by Vehicle involving 1 person. Initial bystander status: consciousness reported as 'Responding', breathing reported as 'Normal'. Observed concerns include: Pedestrian on pavement, Suspected Fracture.",
+                incident_category="TRAUMA_GENERAL",
+                people_count=1,
+                consciousness="Responding",
+                breathing="Normal",
+                visible_concerns=["Pedestrian on pavement", "Suspected Fracture", "Crowd gathering"],
+                location_summary="Market St & 4th Ave, Downtown (Near: Central metro station exit)",
+                extracted_keywords=["pedestrian", "bicycle", "crossing", "conscious", "leg", "pain"],
+                uncertainty_flags=["Bystander notes unverified by medical personnel"],
+                missing_information=["Definitive orthopedic assessment pending EMS on-scene verification"],
+                confidence_score=0.86,
+                source="AI_STRUCTURED",
+                model_name="lifesync-nlp-local-v1",
+                model_version="1.2.0",
+                prompt_version="v1.2",
+                status="COMPLETED",
+                structured_payload={"incident_category": "TRAUMA_GENERAL", "confidence_score": 0.86},
+                generated_at=three_mins_ago,
+            )
+            db.add(ai_4)
 
     db.commit()
 

@@ -34,3 +34,4 @@ class CitizenReport(Base, TimestampMixin):
 
     # Relationships
     case = relationship("EmergencyCase", back_populates="citizen_reports")
+    ai_reports = relationship("AIStructuredReport", back_populates="citizen_report", cascade="all, delete-orphan")
