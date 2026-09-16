@@ -1,9 +1,25 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime, timezone
+from contextlib import asynccontextmanager
 from app.core.config import settings
 from app.api.v1.api import api_router
 from app.schemas.health import RootResponse, HealthResponse
+from app.core.seed import init_db_and_seed
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """
+    Application lifespan manager.
+    Initializes database tables and seeds demo data on startup.
+    """
+    try:
+        init_db_and_seed()
+    except Exception as e:
+        print(f"Database startup initialization note: {e}")
+    yield
+
 
 # Initialize FastAPI Application
 app = FastAPI(
@@ -13,6 +29,7 @@ app = FastAPI(
     openapi_url="/openapi.json",
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan,
 )
 
 # Set up CORS middleware

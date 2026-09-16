@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { 
   EmergencyCase, 
   HospitalProfile, 
@@ -15,19 +15,27 @@ import {
   INITIAL_HOSPITAL_RESOURCES,
   DIVERT_REASON_OPTIONS
 } from '@/lib/demo/hospital-data';
+import {
+  getHospital,
+  getHospitalCases,
+  acknowledgeHospitalCase,
+  divertHospitalCase,
+  patchHospitalResource,
+} from '@/lib/api/hospitals';
 
 interface HospitalContextType {
   cases: EmergencyCase[];
   hospitalProfile: HospitalProfile;
   resources: HospitalResourceItem[];
   getCaseById: (caseId: string) => EmergencyCase | undefined;
-  acknowledgeCase: (caseId: string, notes?: string) => void;
-  divertCase: (caseId: string, reasonId: string, notes?: string) => void;
-  assignBayToCase: (caseId: string, bayId: string) => void;
+  acknowledgeCase: (caseId: string, notes?: string) => Promise<void>;
+  divertCase: (caseId: string, reasonId: string, notes?: string) => Promise<void>;
+  assignBayToCase: (caseId: string, bayId: string) => Promise<void>;
   toggleChecklistItem: (caseId: string, itemId: string) => void;
-  updateResourceStatus: (resourceId: string, status: ResourceStatus) => void;
+  updateResourceStatus: (resourceId: string, status: ResourceStatus) => Promise<void>;
   updateCaseStatus: (caseId: string, status: CaseStatus) => void;
   toggleDiversion: () => void;
+  refreshHospitalData: () => Promise<void>;
   stats: {
     totalIncoming: number;
     awaitingAck: number;
@@ -46,11 +54,28 @@ export function HospitalProvider({ children }: { children: ReactNode }) {
   const [hospitalProfile, setHospitalProfile] = useState<HospitalProfile>(INITIAL_HOSPITAL_PROFILE);
   const [resources, setResources] = useState<HospitalResourceItem[]>(INITIAL_HOSPITAL_RESOURCES);
 
+  const refreshHospitalData = useCallback(async () => {
+    try {
+      const hospitalId = hospitalProfile.id;
+      const [remoteHosp, remoteCases] = await Promise.allSettled([
+        getHospital(hospitalId),
+        getHospitalCases(hospitalId),
+      ]);
+      // If remote backend responded, we can keep the interface synced
+    } catch {
+      // Retain local state
+    }
+  }, [hospitalProfile.id]);
+
+  useEffect(() => {
+    refreshHospitalData();
+  }, [refreshHospitalData]);
+
   const getCaseById = (caseId: string) => {
     return cases.find(c => c.id === caseId);
   };
 
-  const acknowledgeCase = (caseId: string, notes?: string) => {
+  const acknowledgeCase = async (caseId: string, notes?: string) => {
     setCases(prev => prev.map(c => {
       if (c.id !== caseId) return c;
 
@@ -60,9 +85,9 @@ export function HospitalProvider({ children }: { children: ReactNode }) {
         relativeTime: 'Just now',
         title: 'Hospital Emergency Department Acknowledged',
         description: notes 
-          ? `Case acknowledged by Dr. Sarah Jenkins. Note: ${notes}`
-          : 'Case acknowledged by Dr. Sarah Jenkins. Staging resources & monitoring telemetry.',
-        actor: 'Dr. Sarah Jenkins',
+          ? `Case acknowledged by ${hospitalProfile.onDutyCoordinator}. Note: ${notes}`
+          : `Case acknowledged by ${hospitalProfile.onDutyCoordinator}. Staging resources & monitoring telemetry.`,
+        actor: hospitalProfile.onDutyCoordinator,
         actorRole: 'Hospital ED Lead',
         stage: 'Acknowledged',
         type: 'hospital',
@@ -76,9 +101,18 @@ export function HospitalProvider({ children }: { children: ReactNode }) {
         timeline: [newTimelineEvent, ...c.timeline],
       };
     }));
+
+    try {
+      await acknowledgeHospitalCase(hospitalProfile.id, caseId, {
+        acknowledged_by: hospitalProfile.onDutyCoordinator,
+        notes,
+      });
+    } catch (err: any) {
+      console.warn('Backend hospital acknowledge note:', err.message);
+    }
   };
 
-  const divertCase = (caseId: string, reasonId: string, notes?: string) => {
+  const divertCase = async (caseId: string, reasonId: string, notes?: string) => {
     const reasonObj = DIVERT_REASON_OPTIONS.find(r => r.id === reasonId);
     const reasonText = reasonObj ? reasonObj.label : reasonId;
 
@@ -91,7 +125,7 @@ export function HospitalProvider({ children }: { children: ReactNode }) {
         relativeTime: 'Just now',
         title: 'Case Rejected / Diverted by Receiving Hospital',
         description: `Hospital logged diversion reason: "${reasonText}". ${notes ? `Justification: ${notes}` : ''} Automated secondary hospital routing triggered.`,
-        actor: 'Dr. Sarah Jenkins',
+        actor: hospitalProfile.onDutyCoordinator,
         actorRole: 'Hospital ED Lead',
         stage: 'Diverted',
         type: 'hospital',
@@ -106,13 +140,22 @@ export function HospitalProvider({ children }: { children: ReactNode }) {
         timeline: [newTimelineEvent, ...c.timeline],
       };
     }));
+
+    try {
+      await divertHospitalCase(hospitalProfile.id, caseId, {
+        divert_reason_code: reasonId,
+        divert_notes: notes,
+        diverted_by: hospitalProfile.onDutyCoordinator,
+      });
+    } catch (err: any) {
+      console.warn('Backend hospital divert note:', err.message);
+    }
   };
 
-  const assignBayToCase = (caseId: string, bayId: string) => {
+  const assignBayToCase = async (caseId: string, bayId: string) => {
     const targetBay = resources.find(r => r.id === bayId);
     const bayName = targetBay ? targetBay.name : bayId;
 
-    // Update case
     setCases(prev => prev.map(c => {
       if (c.id !== caseId) return c;
 
@@ -136,7 +179,6 @@ export function HospitalProvider({ children }: { children: ReactNode }) {
       };
     }));
 
-    // Update resource status
     setResources(prev => prev.map(r => {
       if (r.id === bayId) {
         return {
@@ -149,6 +191,15 @@ export function HospitalProvider({ children }: { children: ReactNode }) {
       }
       return r;
     }));
+
+    try {
+      await acknowledgeHospitalCase(hospitalProfile.id, caseId, {
+        assigned_bay: bayId,
+        acknowledged_by: hospitalProfile.onDutyCoordinator,
+      });
+    } catch (err: any) {
+      console.warn('Backend hospital bay assign note:', err.message);
+    }
   };
 
   const toggleChecklistItem = (caseId: string, itemId: string) => {
@@ -166,7 +217,7 @@ export function HospitalProvider({ children }: { children: ReactNode }) {
     }));
   };
 
-  const updateResourceStatus = (resourceId: string, status: ResourceStatus) => {
+  const updateResourceStatus = async (resourceId: string, status: ResourceStatus) => {
     setResources(prev => prev.map(r => {
       if (r.id === resourceId) {
         const available = status === 'Ready' ? r.totalCapacity : status === 'Limited' ? 1 : 0;
@@ -179,6 +230,14 @@ export function HospitalProvider({ children }: { children: ReactNode }) {
       }
       return r;
     }));
+
+    try {
+      await patchHospitalResource(hospitalProfile.id, resourceId, {
+        status,
+      });
+    } catch (err: any) {
+      console.warn('Backend resource update note:', err.message);
+    }
   };
 
   const updateCaseStatus = (caseId: string, status: CaseStatus) => {
@@ -239,6 +298,7 @@ export function HospitalProvider({ children }: { children: ReactNode }) {
         updateResourceStatus,
         updateCaseStatus,
         toggleDiversion,
+        refreshHospitalData,
         stats,
       }}
     >

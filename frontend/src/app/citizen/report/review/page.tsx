@@ -6,12 +6,13 @@ import Link from 'next/link';
 import { useCitizen } from '@/context/CitizenContext';
 import { ProgressIndicator } from '@/components/citizen/ProgressIndicator';
 import { ReportSummaryCard } from '@/components/citizen/ReportSummaryCard';
-import { ArrowLeft, AlertCircle } from 'lucide-react';
+import { ArrowLeft, AlertCircle, AlertTriangle } from 'lucide-react';
 
 export default function CitizenReviewPage() {
   const router = useRouter();
-  const { draftReport, submitReport } = useCitizen();
+  const { draftReport, submitReport, error: contextError } = useCitizen();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   // If user navigated directly without selecting incident
   if (!draftReport.incidentType) {
@@ -40,13 +41,16 @@ export default function CitizenReviewPage() {
     router.push(`/citizen/report?step=${stepNumber}`);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setIsSubmitting(true);
-    // Simulate swift network dispatch and registration
-    setTimeout(() => {
-      const newCaseId = submitReport();
+    setSubmitError(null);
+    try {
+      const newCaseId = await submitReport();
       router.push(`/citizen/emergency/${newCaseId}`);
-    }, 450);
+    } catch (err: any) {
+      setSubmitError(err.message || 'Failed to submit report. Backend server may be offline.');
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -62,6 +66,16 @@ export default function CitizenReviewPage() {
           Confirm the information before transmitting to emergency services and hospital readiness teams.
         </p>
       </div>
+
+      {(submitError || contextError) && (
+        <div className="rounded-xl border border-red-500/40 bg-red-950/40 p-4 flex items-start gap-3">
+          <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0 mt-0.5" />
+          <div className="space-y-1 text-xs">
+            <p className="font-bold text-red-200">Transmission Error</p>
+            <p className="text-red-300">{submitError || contextError}</p>
+          </div>
+        </div>
+      )}
 
       {/* Review Summary Component */}
       <ReportSummaryCard
