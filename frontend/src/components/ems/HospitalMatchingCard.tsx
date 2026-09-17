@@ -405,7 +405,9 @@ export function HospitalMatchingCard({
             <div className="p-3 rounded-2xl bg-slate-900 border border-slate-800 text-right shrink-0">
               <span className="text-[10px] text-slate-400 uppercase font-mono block">Suitability Score</span>
               <div className="text-xl font-black text-sky-400 font-mono">
-                {topCandidate.suitability_score.toFixed(1)} <span className="text-xs text-slate-500 font-normal">/ 100</span>
+                {topCandidate.suitability_score != null
+                  ? topCandidate.suitability_score.toFixed(1)
+                  : '0.0'} <span className="text-xs text-slate-500 font-normal">/ 100</span>
               </div>
             </div>
           </div>
@@ -415,7 +417,9 @@ export function HospitalMatchingCard({
             <div className="p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80 space-y-0.5">
               <span className="text-slate-400 text-[10px] uppercase font-bold block">Capability Match (40%)</span>
               <div className="font-mono font-black text-white text-xs sm:text-sm">
-                {topCandidate.capability_score.toFixed(1)} / 100
+                {topCandidate.capability_score != null
+                  ? topCandidate.capability_score.toFixed(1)
+                  : '0.0'} / 100
               </div>
             </div>
             <div className="p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80 space-y-0.5">
@@ -586,7 +590,9 @@ export function HospitalMatchingCard({
                     <div className="text-right min-w-[50px]">
                       <span className="text-slate-500 text-[10px] block uppercase">Score</span>
                       <span className={`font-black ${candidate.is_eligible ? 'text-sky-400' : 'text-slate-600'}`}>
-                        {candidate.is_eligible ? candidate.suitability_score.toFixed(1) : '0.0'}
+                        {candidate.is_eligible && candidate.suitability_score != null
+                          ? candidate.suitability_score.toFixed(1)
+                          : '0.0'}
                       </span>
                     </div>
 

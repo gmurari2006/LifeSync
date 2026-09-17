@@ -17,7 +17,7 @@ export function StatusBadge({ status, size = 'md' }: StatusBadgeProps) {
 
   const label = status === 'Alerted' 
     ? 'Awaiting Ack' 
-    : status.toUpperCase();
+    : (status || 'UNKNOWN').toUpperCase();
 
   return (
     <span
