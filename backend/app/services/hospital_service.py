@@ -7,6 +7,9 @@ from app.schemas.hospital import (
     HospitalAcknowledgeRequest,
     HospitalDivertRequest,
     HospitalResourceUpdate,
+    HospitalBayAllocationRequest,
+    HospitalReadinessChecklistUpdateRequest,
+    HospitalSettingsUpdate,
 )
 from app.schemas.readiness import ReadinessSummaryResponse
 from app.services.case_service import get_case_by_identifier, update_case_lifecycle_state
