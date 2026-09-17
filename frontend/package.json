@@ -2,6 +2,9 @@
   "name": "lifesync-frontend",
   "version": "1.2.0-foundation",
   "private": true,
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "dev": "next dev -p 3000",
     "build": "next build",
