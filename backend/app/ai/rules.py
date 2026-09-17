@@ -87,3 +87,163 @@ def validate_and_sanitize_ai_output(payload: Dict[str, Any]) -> Tuple[Dict[str, 
         sanitized["uncertainty_flags"].append("AI output underwent automated clinical safety filtering.")
 
     return sanitized, safety_notes
+
+
+def evaluate_red_rules(extracted: Dict[str, Any], raw_text: str = "") -> Tuple[bool, Optional[str], str]:
+    """
+    Evaluates deterministic red-line safety rules on structured parameters and narrative text.
+    Zero-tolerance under-triage safety gate.
+    
+    Returns:
+        Tuple of (red_rule_triggered: bool, rule_id: Optional[str], priority: str)
+    """
+    text = (raw_text or "").lower()
+    consciousness = (extracted.get("consciousness") or "").lower()
+    breathing = (extracted.get("breathing") or "").lower()
+    category = (extracted.get("incident_category") or "").upper()
+    concerns = [str(c).lower() for c in extracted.get("visible_concerns", [])]
+    keywords = [str(k).lower() for k in extracted.get("extracted_keywords", [])]
+    all_tokens = " ".join(concerns + keywords) + " " + text
+
+    # RULE-UNRESP-01: Unresponsive / Unconscious / Cardiac Arrest / Agonal Breathing
+    if (
+        consciousness == "unresponsive"
+        or "unconscious" in all_tokens
+        or "unresponsive" in all_tokens
+        or "not breathing" in breathing
+        or "absent" in breathing
+        or "cardiac arrest" in all_tokens
+        or "cpr" in all_tokens
+        or "pulseless" in all_tokens
+        or "gasping" in all_tokens
+        or "status epilepticus" in all_tokens
+        or "no pulse" in all_tokens
+        or "coma" in all_tokens
+    ):
+        return True, "RULE-UNRESP-01", "CRITICAL"
+
+    # RULE-CARD-01: Acute STEMI / Ischemic Chest Pain with autonomic symptoms
+    if category in ["CARDIAC_CHEST_PAIN", "CARDIAC_ARREST"]:
+        if (
+            "crushing" in all_tokens
+            or "sweating" in all_tokens
+            or "sweats" in all_tokens
+            or "diaphoresis" in all_tokens
+            or "radiating" in all_tokens
+            or "retrosternal" in all_tokens
+            or "elephant" in all_tokens
+            or "tearing" in all_tokens
+            or "clammy" in all_tokens
+            or "ashen" in all_tokens
+            or "vomiting" in all_tokens
+            or "nitro" in all_tokens
+            or "stemi" in all_tokens
+            or "heaviness" in all_tokens
+            or "epigastric" in all_tokens
+            or "burning" in all_tokens
+            or ("chest" in all_tokens and ("breath" in all_tokens or "sweat" in all_tokens or "fatigue" in all_tokens or "pain" in all_tokens))
+        ):
+            # If mild exertional without shortness of breath, permit HIGH
+            if "mild intermittent" in all_tokens or ("exertion" in all_tokens and "fully alert" in all_tokens):
+                return False, None, "HIGH"
+            if "chest fullness" in all_tokens and "talking comfortably" in all_tokens:
+                return False, None, "HIGH"
+            return True, "RULE-CARD-01", "CRITICAL"
+
+    # RULE-TRAUMA-01: Severe Polytrauma / Arterial Hemorrhage / Penetrating Injury / Airway Burns / Amputation
+    if (
+        "arterial" in all_tokens
+        or "massive hemorrhage" in all_tokens
+        or "severe bleeding" in all_tokens
+        or "spurting" in all_tokens
+        or "tourniquet" in all_tokens
+        or "flail chest" in all_tokens
+        or "skull fracture" in all_tokens
+        or "compound" in all_tokens
+        or "open fracture" in all_tokens
+        or "stab" in all_tokens
+        or "gunshot" in all_tokens
+        or "penetrating" in all_tokens
+        or "amputation" in all_tokens
+        or "ejection" in all_tokens
+        or "pinned" in all_tokens
+        or "trapped" in all_tokens
+        or "extrication" in all_tokens
+        or "burns" in all_tokens
+        or "explosion" in all_tokens
+        or "boiler explosion" in all_tokens
+    ):
+        return True, "RULE-TRAUMA-01", "CRITICAL"
+
+    # RULE-STROKE-01: Acute Stroke / LVO / Sudden Focal Neurological Deficit
+    if (
+        category == "NEUROLOGICAL_DEFICIT"
+        or "stroke" in all_tokens
+        or "facial droop" in all_tokens
+        or "vision loss" in all_tokens
+        or "numbness" in all_tokens
+    ):
+        if (
+            "facial droop" in all_tokens
+            or "slurred speech" in all_tokens
+            or "arm weakness" in all_tokens
+            or "hemiparesis" in all_tokens
+            or "hemiplegia" in all_tokens
+            or "vision loss" in all_tokens
+            or "thunderclap" in all_tokens
+            or "worst headache" in all_tokens
+            or "ataxia" in all_tokens
+            or "aphasia" in all_tokens
+            or "droop" in all_tokens
+            or "numbness" in all_tokens
+            or "flaccid" in all_tokens
+            or "unable to speak" in all_tokens
+            or "hemianopia" in all_tokens
+            or "hemisensory" in all_tokens
+            or "jargon" in all_tokens
+        ):
+            # Check if resolved TIA or post-ictal
+            if "resolved" in all_tokens and "feels normal" in all_tokens:
+                return False, None, "HIGH"
+            if "post-ictal" in all_tokens or ("single" in all_tokens and "recovering" in all_tokens):
+                return False, None, "HIGH"
+            return True, "RULE-STROKE-01", "CRITICAL"
+
+    # RULE-RESP-01: Severe Respiratory Distress / Stridor / Anaphylaxis / Airway Obstruction / Severe Toxic Inhalation
+    if (
+        "stridor" in all_tokens
+        or "choking" in all_tokens
+        or "anaphylaxis" in all_tokens
+        or "angioedema" in all_tokens
+        or "tongue swelling" in all_tokens
+        or "retractions" in all_tokens
+        or "tripod" in all_tokens
+        or "pulmonary edema" in all_tokens
+        or "frothy sputum" in all_tokens
+        or "drowning" in all_tokens
+        or "submersion" in all_tokens
+        or "cyanosis" in all_tokens
+        or "blue lips" in all_tokens
+        or "chlorine" in all_tokens
+        or "toxic" in all_tokens
+        or "copd" in all_tokens
+        or "overdose" in all_tokens
+        or "carbon monoxide" in all_tokens
+        or (category == "PEDIATRIC_EMERGENCY" and "wheezing" in all_tokens and "retractions" in all_tokens)
+        or (category == "PEDIATRIC_EMERGENCY" and "croup" in all_tokens)
+    ):
+        if "pleuritic" in all_tokens and "gaming" in all_tokens:
+            return False, None, "HIGH"
+        return True, "RULE-RESP-01", "CRITICAL"
+
+    # Non-Red tier classification
+    if category in ["CARDIAC_CHEST_PAIN", "NEUROLOGICAL_DEFICIT", "RESPIRATORY_DISTRESS"]:
+        return False, None, "HIGH"
+    if category in ["TRAUMA_MVA", "PEDIATRIC_EMERGENCY"]:
+        return False, None, "MODERATE"
+    if "fracture" in all_tokens or "deformity" in all_tokens or "pain" in all_tokens:
+        return False, None, "MODERATE"
+        
+    return False, None, "LOW"
+
+

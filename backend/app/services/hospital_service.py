@@ -15,14 +15,34 @@ from app.realtime.events import publish_case_event
 from app.realtime.schemas import RealtimeEventType, ProvenanceSource
 
 
+HOSPITAL_ID_ALIAS_MAP = {
+    "HOSP-01": "HOSP-CITYCARE-01",
+    "HOSP-APEX-01": "HOSP-CITYCARE-01",
+    "HOSP-02": "HOSP-METRO-02",
+    "HOSP-CITY-02": "HOSP-METRO-02",
+    "HOSP-03": "HOSP-STJUDE-03",
+    "HOSP-NEURO-03": "HOSP-STJUDE-03",
+    "HOSP-04": "HOSP-VALLEY-04",
+    "HOSP-05": "HOSP-NORTH-05",
+}
+
+
+def resolve_hospital_id(hospital_id: str) -> str:
+    """Resolve aliases like HOSP-01 or HOSP-APEX-01 to canonical database ID."""
+    return HOSPITAL_ID_ALIAS_MAP.get(hospital_id.upper(), hospital_id)
+
+
 def list_hospitals(db: Session) -> List[Hospital]:
     """Retrieve all hospital facilities."""
     return db.query(Hospital).all()
 
 
 def get_hospital_by_id(db: Session, hospital_id: str) -> Optional[Hospital]:
-    """Retrieve a hospital facility by unique ID."""
-    return db.query(Hospital).filter(Hospital.id == hospital_id).first()
+    """Retrieve a hospital facility by unique ID or canonical alias."""
+    canonical_id = resolve_hospital_id(hospital_id)
+    return db.query(Hospital).filter(
+        (Hospital.id == hospital_id) | (Hospital.id == canonical_id)
+    ).first()
 
 
 def list_hospital_cases(
@@ -33,12 +53,15 @@ def list_hospital_cases(
     """
     List emergency cases directed to or inbound to a specific hospital.
     """
+    canonical_id = resolve_hospital_id(hospital_id)
+    ids = list(set([hospital_id, canonical_id]))
     query = db.query(EmergencyCase).filter(
-        EmergencyCase.destination_hospital_id == hospital_id
+        EmergencyCase.destination_hospital_id.in_(ids)
     )
     if status:
         query = query.filter(EmergencyCase.status == status.upper())
     return query.order_by(EmergencyCase.time_reported.desc()).all()
+
 
 
 def acknowledge_incoming_case(

@@ -10,6 +10,7 @@ from app.api.v1.endpoints import (
     hospital_matching,
     overrides,
     audit,
+    scenarios,
 )
 from app.simulation import simulation_router
 
@@ -27,4 +28,6 @@ api_router.include_router(readiness.router, prefix="/hospitals", tags=["Hospital
 api_router.include_router(ai.router, prefix="/ai", tags=["AI Structuring Layer"])
 api_router.include_router(hospital_matching.router, prefix="/hospital-matching", tags=["Hospital Matching & Diversion"])
 api_router.include_router(simulation_router, prefix="/simulation", tags=["Ambulance Telemetry Simulation"])
+api_router.include_router(scenarios.router, prefix="/scenarios", tags=["Scenario Switchboard & Demo Runner"])
+
 

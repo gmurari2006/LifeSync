@@ -13,6 +13,7 @@ import {
   INITIAL_EMERGENCY_CASES, 
   INITIAL_HOSPITAL_PROFILE, 
   INITIAL_HOSPITAL_RESOURCES,
+  DEMO_HOSPITAL_PROFILES,
   DIVERT_REASON_OPTIONS
 } from '@/lib/demo/hospital-data';
 import {
@@ -27,6 +28,11 @@ interface HospitalContextType {
   cases: EmergencyCase[];
   hospitalProfile: HospitalProfile;
   resources: HospitalResourceItem[];
+  selectedHospitalId: string;
+  userRole: string;
+  setUserRole: (role: string) => void;
+  canSwitchFacility: boolean;
+  switchHospital: (hospitalId: string) => Promise<void>;
   getCaseById: (caseId: string) => EmergencyCase | undefined;
   acknowledgeCase: (caseId: string, notes?: string) => Promise<void>;
   divertCase: (caseId: string, reasonId: string, notes?: string) => Promise<void>;
@@ -50,22 +56,41 @@ interface HospitalContextType {
 const HospitalContext = createContext<HospitalContextType | undefined>(undefined);
 
 export function HospitalProvider({ children }: { children: ReactNode }) {
+  const [selectedHospitalId, setSelectedHospitalId] = useState<string>('HOSP-CITYCARE-01');
+  const [userRole, setUserRole] = useState<string>('DEMO_ADMIN');
   const [cases, setCases] = useState<EmergencyCase[]>(INITIAL_EMERGENCY_CASES);
   const [hospitalProfile, setHospitalProfile] = useState<HospitalProfile>(INITIAL_HOSPITAL_PROFILE);
   const [resources, setResources] = useState<HospitalResourceItem[]>(INITIAL_HOSPITAL_RESOURCES);
 
-  const refreshHospitalData = useCallback(async () => {
+  const canSwitchFacility = ['DEMO_ADMIN', 'HOSPITAL_ADMIN', 'REGIONAL_DISPATCHER', 'SYSTEM'].includes(userRole.toUpperCase());
+
+  const switchHospital = async (hospitalId: string) => {
+    setSelectedHospitalId(hospitalId);
+    const profile = DEMO_HOSPITAL_PROFILES[hospitalId] || INITIAL_HOSPITAL_PROFILE;
+    setHospitalProfile(profile);
+
     try {
-      const hospitalId = hospitalProfile.id;
       const [remoteHosp, remoteCases] = await Promise.allSettled([
         getHospital(hospitalId),
         getHospitalCases(hospitalId),
       ]);
-      // If remote backend responded, we can keep the interface synced
+    } catch {
+      // Retain state
+    }
+  };
+
+  const refreshHospitalData = useCallback(async () => {
+    try {
+      const hospitalId = selectedHospitalId;
+      const [remoteHosp, remoteCases] = await Promise.allSettled([
+        getHospital(hospitalId),
+        getHospitalCases(hospitalId),
+      ]);
     } catch {
       // Retain local state
     }
-  }, [hospitalProfile.id]);
+  }, [selectedHospitalId]);
+
 
   useEffect(() => {
     refreshHospitalData();
@@ -290,6 +315,11 @@ export function HospitalProvider({ children }: { children: ReactNode }) {
         cases,
         hospitalProfile,
         resources,
+        selectedHospitalId,
+        userRole,
+        setUserRole,
+        canSwitchFacility,
+        switchHospital,
         getCaseById,
         acknowledgeCase,
         divertCase,
@@ -302,6 +332,7 @@ export function HospitalProvider({ children }: { children: ReactNode }) {
         stats,
       }}
     >
+
       {children}
     </HospitalContext.Provider>
   );

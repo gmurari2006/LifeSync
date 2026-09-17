@@ -40,6 +40,51 @@ export function ReportSummaryCard({
         </div>
       </div>
 
+      {/* Assistive Missing Information Micro-Prompts */}
+      {(report.isAwake === 'Not Sure' || report.isBreathingNormally === 'Not Sure' || !report.location.landmark) && (
+        <div className="rounded-2xl border border-amber-500/30 bg-amber-950/20 p-4 space-y-2.5">
+          <div className="flex items-center gap-2 text-xs font-bold text-amber-300 uppercase tracking-wider">
+            <AlertOctagon className="h-4 w-4 text-amber-400" />
+            <span>Help Responders: Missing Information Check</span>
+          </div>
+          <p className="text-xs text-slate-300">
+            Providing any missing details below helps emergency crews prepare the right equipment prior to arrival:
+          </p>
+          <div className="flex flex-wrap gap-2 pt-1">
+            {report.isAwake === 'Not Sure' && (
+              <button
+                type="button"
+                onClick={() => onEditStep(3)}
+                className="px-3 py-1.5 rounded-lg border border-amber-500/40 bg-amber-900/30 hover:bg-amber-800/40 text-amber-200 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+              >
+                <span>+ Clarify Consciousness Status</span>
+                <Edit3 className="h-3 w-3" />
+              </button>
+            )}
+            {report.isBreathingNormally === 'Not Sure' && (
+              <button
+                type="button"
+                onClick={() => onEditStep(3)}
+                className="px-3 py-1.5 rounded-lg border border-amber-500/40 bg-amber-900/30 hover:bg-amber-800/40 text-amber-200 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+              >
+                <span>+ Clarify Breathing Status</span>
+                <Edit3 className="h-3 w-3" />
+              </button>
+            )}
+            {!report.location.landmark && (
+              <button
+                type="button"
+                onClick={() => onEditStep(4)}
+                className="px-3 py-1.5 rounded-lg border border-purple-500/40 bg-purple-900/30 hover:bg-purple-800/40 text-purple-200 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+              >
+                <span>+ Add Nearby Landmark / Floor</span>
+                <Edit3 className="h-3 w-3" />
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Summary Cards */}
       <div className="space-y-3">
         {/* Section 1: Incident */}
