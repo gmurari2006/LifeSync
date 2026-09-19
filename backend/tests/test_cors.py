@@ -11,6 +11,7 @@ def test_cors_preflight_allowed_origins():
         "http://127.0.0.1:3000",
         "http://localhost:8000",
         "http://127.0.0.1:8000",
+        "https://life-sync-snowy.vercel.app",
         "https://life-sync-gmurari2006s-projects.vercel.app",
         "https://life-sync-git-master-gmurari2006s-projects.vercel.app",
     ]
