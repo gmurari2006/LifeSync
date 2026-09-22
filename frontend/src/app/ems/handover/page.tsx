@@ -29,22 +29,22 @@ export default function EMSHandoverPage() {
           <div className="flex items-center gap-2">
             <Link
               href="/ems"
-              className="text-xs text-slate-400 hover:text-white flex items-center gap-1 font-medium"
+              className="text-xs text-slate-500 hover:text-slate-900 flex items-center gap-1 font-medium transition-colors"
             >
               <ArrowLeft className="h-3.5 w-3.5" /> Dashboard
             </Link>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2.5">
-            <FileCheck className="h-7 w-7 text-emerald-400" />
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2.5">
+            <FileCheck className="h-7 w-7 text-emerald-600" />
             <span>Hospital Bedside Handover</span>
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400">
+          <p className="text-xs sm:text-sm text-slate-500">
             Structured clinical transfer protocol from EMS field crew to receiving Emergency Department
           </p>
         </div>
 
         {/* Case selector tabs */}
-        <div className="flex flex-wrap gap-1.5 p-1 rounded-2xl bg-slate-900 border border-slate-800 self-start sm:self-auto">
+        <div className="flex flex-wrap gap-1.5 p-1 rounded-xl bg-slate-100 border border-slate-200 self-start sm:self-auto">
           {Object.values(cases).map((c) => (
             <button
               key={c.id}
@@ -53,10 +53,10 @@ export default function EMSHandoverPage() {
                 setSelectedCaseId(c.id);
                 setActiveCaseId(c.id);
               }}
-              className={`px-3 py-1.5 rounded-xl font-mono text-xs font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-lg font-mono text-xs font-bold transition-all ${
                 selectedCaseId === c.id
-                  ? 'bg-orange-600 text-white shadow-md'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               {c.id}
@@ -71,13 +71,13 @@ export default function EMSHandoverPage() {
       )}
 
       {/* Post Handover Information Note */}
-      <div className="p-4 rounded-2xl bg-slate-900/40 border border-slate-800 text-xs text-slate-400 flex items-start gap-3">
-        <ShieldCheck className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
+      <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-start gap-3">
+        <ShieldCheck className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
         <div className="space-y-1">
-          <p className="font-bold text-slate-200 uppercase tracking-wide">
+          <p className="font-bold text-slate-800 uppercase tracking-wide">
             Clinical Handover Protocol Standard
           </p>
-          <p className="leading-relaxed">
+          <p className="leading-relaxed text-slate-600">
             Completing bedside handover certifies that verbal reporting, verified vital records, and physical patient care have been successfully transitioned to the hospital emergency department. This locks the field record and frees Unit ALS-04 for next dispatch.
           </p>
         </div>

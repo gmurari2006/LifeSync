@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { IncidentCategory } from '@/types/citizen';
-import { INCIDENT_OPTIONS, IncidentOption } from '@/lib/demo/citizen-data';
+import { INCIDENT_OPTIONS } from '@/lib/demo/citizen-data';
 import { 
   Car, 
   HeartPulse, 
@@ -24,33 +24,33 @@ export function IncidentTypeSelector({ selected, onSelect }: IncidentTypeSelecto
   const getIcon = (iconName: string) => {
     switch (iconName) {
       case 'Car':
-        return <Car className="h-6 w-6 text-red-400" />;
+        return <Car className="h-5 w-5 text-red-600" />;
       case 'HeartPulse':
-        return <HeartPulse className="h-6 w-6 text-red-400" />;
+        return <HeartPulse className="h-5 w-5 text-red-600" />;
       case 'Wind':
-        return <Wind className="h-6 w-6 text-sky-400" />;
+        return <Wind className="h-5 w-5 text-sky-600" />;
       case 'UserX':
-        return <UserX className="h-6 w-6 text-amber-400" />;
+        return <UserX className="h-5 w-5 text-amber-600" />;
       case 'PersonStanding':
-        return <PersonStanding className="h-6 w-6 text-emerald-400" />;
+        return <PersonStanding className="h-5 w-5 text-emerald-600" />;
       case 'Activity':
-        return <Activity className="h-6 w-6 text-purple-400" />;
+        return <Activity className="h-5 w-5 text-purple-600" />;
       case 'Flame':
-        return <Flame className="h-6 w-6 text-orange-400" />;
+        return <Flame className="h-5 w-5 text-orange-600" />;
       case 'HelpCircle':
       default:
-        return <HelpCircle className="h-6 w-6 text-slate-400" />;
+        return <HelpCircle className="h-5 w-5 text-slate-500" />;
     }
   };
 
   return (
     <div className="space-y-4">
       <div className="space-y-1 text-center sm:text-left">
-        <h2 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
+        <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
           What happened?
         </h2>
-        <p className="text-xs sm:text-sm text-slate-400">
-          Tap the option that best matches the current emergency.
+        <p className="text-xs sm:text-sm text-slate-500">
+          Select the emergency type that best describes the situation.
         </p>
       </div>
 
@@ -62,40 +62,40 @@ export function IncidentTypeSelector({ selected, onSelect }: IncidentTypeSelecto
               key={opt.id}
               type="button"
               onClick={() => onSelect(opt.id)}
-              className={`p-4 rounded-2xl border text-left transition-all flex items-start justify-between gap-3 group active:scale-[0.98] ${
+              className={`p-4 rounded-xl border text-left transition-all flex items-start justify-between gap-3 group active:scale-[0.99] ${
                 isSelected
-                  ? 'border-red-500 bg-red-950/40 shadow-lg shadow-red-950/40 ring-2 ring-red-500/50'
-                  : 'border-slate-800 bg-slate-900/60 hover:border-slate-700 hover:bg-slate-900'
+                  ? 'border-blue-600 bg-blue-50/60 shadow-xs ring-2 ring-blue-500/30'
+                  : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 shadow-xs'
               }`}
             >
-              <div className="flex items-start gap-3.5">
-                <div className={`p-2.5 rounded-xl border shrink-0 ${
+              <div className="flex items-start gap-3">
+                <div className={`p-2 rounded-lg border shrink-0 ${
                   isSelected 
-                    ? 'bg-red-950/80 border-red-500/40' 
-                    : 'bg-slate-950 border-slate-800 group-hover:border-slate-700'
+                    ? 'bg-white border-blue-200' 
+                    : 'bg-slate-50 border-slate-200'
                 }`}>
                   {getIcon(opt.iconName)}
                 </div>
 
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-white leading-snug">
+                    <span className="text-sm font-bold text-slate-900 leading-snug">
                       {opt.title}
                     </span>
                     {opt.badge && (
-                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-950 text-red-300 border border-red-800/60">
+                      <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-red-50 text-red-700 border border-red-200">
                         {opt.badge}
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-slate-400 leading-snug">
+                  <p className="text-xs text-slate-500 leading-snug">
                     {opt.description}
                   </p>
                 </div>
               </div>
 
-              <ChevronRight className={`h-5 w-5 shrink-0 transition-transform ${
-                isSelected ? 'text-red-400 translate-x-0.5' : 'text-slate-400 group-hover:text-slate-400'
+              <ChevronRight className={`h-4 w-4 shrink-0 transition-transform ${
+                isSelected ? 'text-blue-600 translate-x-0.5' : 'text-slate-400 group-hover:text-slate-600'
               }`} />
             </button>
           );

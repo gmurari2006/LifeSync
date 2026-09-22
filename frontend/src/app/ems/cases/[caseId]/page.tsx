@@ -72,18 +72,18 @@ export default function EMSCaseDetailPage({
   if (!currentCase) {
     return (
       <div className="space-y-6 py-12 text-center">
-        <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-8 max-w-lg mx-auto space-y-4 shadow-2xl">
-          <AlertCircle className="h-12 w-12 text-amber-400 mx-auto" />
+        <div className="rounded-2xl border border-slate-200 bg-white p-8 max-w-lg mx-auto space-y-4 shadow-xs">
+          <AlertCircle className="h-12 w-12 text-amber-600 mx-auto" />
           <div className="space-y-1">
-            <h2 className="text-xl font-extrabold text-white">Emergency Case Not Found</h2>
-            <p className="text-xs text-slate-300">
-              No active EMS dispatch found matching Case ID <span className="font-mono font-bold text-amber-300">&ldquo;{caseId}&rdquo;</span>.
+            <h2 className="text-xl font-bold text-slate-900">Emergency Case Not Found</h2>
+            <p className="text-xs text-slate-600">
+              No active EMS dispatch found matching Case ID <span className="font-mono font-bold text-amber-700">&ldquo;{caseId}&rdquo;</span>.
             </p>
           </div>
           <div className="pt-2 flex justify-center gap-3">
             <Link
               href="/ems/cases"
-              className="px-5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold transition-all"
+              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all shadow-xs"
             >
               Return to Case Queue
             </Link>
@@ -96,11 +96,11 @@ export default function EMSCaseDetailPage({
   const getPriorityBadge = (priority: string) => {
     switch (priority) {
       case 'Critical':
-        return 'bg-red-950 text-red-300 border-red-800';
+        return 'bg-red-50 text-red-700 border-red-200';
       case 'High':
-        return 'bg-amber-950 text-amber-300 border-amber-800';
+        return 'bg-amber-50 text-amber-700 border-amber-200';
       default:
-        return 'bg-blue-950 text-blue-300 border-blue-800';
+        return 'bg-blue-50 text-blue-700 border-blue-200';
     }
   };
 
@@ -125,7 +125,7 @@ export default function EMSCaseDetailPage({
         <div className="flex items-center gap-3">
           <Link
             href="/ems/cases"
-            className="text-xs text-slate-400 hover:text-white flex items-center gap-1.5 font-bold transition-colors"
+            className="text-xs text-slate-500 hover:text-blue-700 flex items-center gap-1.5 font-bold transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Case Queue</span>
@@ -139,77 +139,77 @@ export default function EMSCaseDetailPage({
         <div className="flex items-center gap-2">
           <button
             onClick={() => setIsOverrideModalOpen(true)}
-            className="px-3 py-1.5 rounded-xl border border-amber-500/40 bg-amber-950/40 hover:bg-amber-900/50 text-amber-300 text-xs font-bold flex items-center gap-1.5 transition-all"
+            className="px-3 py-1.5 rounded-xl border border-amber-200 bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs"
           >
-            <Sliders className="h-3.5 w-3.5 text-amber-400" />
+            <Sliders className="h-3.5 w-3.5 text-amber-700" />
             <span>Override</span>
           </button>
           <Link
             href="/ems/handover"
-            className="px-3 py-1.5 rounded-xl border border-slate-800 bg-slate-900/80 hover:bg-slate-800 text-slate-300 text-xs font-bold flex items-center gap-1.5 transition-all"
+            className="px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs"
           >
-            <FileCheck className="h-3.5 w-3.5 text-emerald-400" />
+            <FileCheck className="h-3.5 w-3.5 text-emerald-600" />
             <span>Bedside Handover</span>
           </Link>
           <Link
             href="/ems/active"
-            className="px-3 py-1.5 rounded-xl border border-orange-500/40 bg-orange-950/40 hover:bg-orange-900/50 text-orange-300 text-xs font-bold flex items-center gap-1.5 transition-all"
+            className="px-3 py-1.5 rounded-xl border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs"
           >
-            <Navigation className="h-3.5 w-3.5 text-orange-400" />
+            <Navigation className="h-3.5 w-3.5 text-blue-600" />
             <span>In-Transit View</span>
           </Link>
         </div>
       </div>
 
       {/* Case Header Hero Banner */}
-      <div className="rounded-3xl border border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900/90 to-slate-950 p-5 sm:p-7 shadow-2xl space-y-4">
+      <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-7 shadow-xs space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-2.5">
-              <span className="font-mono font-black text-2xl sm:text-3xl text-white">
+              <span className="font-mono font-bold text-2xl sm:text-3xl text-slate-900">
                 {currentCase.id}
               </span>
-              <span className={`px-3 py-1 rounded-full text-xs font-extrabold border uppercase tracking-wider ${getPriorityBadge(currentCase.operationalPriority)}`}>
+              <span className={`px-3 py-1 rounded-full text-xs font-bold border uppercase tracking-wider ${getPriorityBadge(currentCase.operationalPriority)}`}>
                 {currentCase.operationalPriority} Priority
               </span>
-              <span className="px-3 py-1 rounded-full text-xs font-bold border border-orange-500/40 bg-orange-950/60 text-orange-300">
+              <span className="px-3 py-1 rounded-full text-xs font-bold border border-slate-200 bg-slate-50 text-slate-700">
                 Status: {currentCase.transportStatus}
               </span>
             </div>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-white">
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900">
               {currentCase.incidentType}
             </h1>
           </div>
 
           {/* Quick Telemetry Pill */}
-          <div className="p-3 rounded-2xl bg-slate-950 border border-slate-800 text-right space-y-0.5 shrink-0 self-start md:self-auto">
-            <div className="flex items-center md:justify-end gap-1 font-mono font-black text-lg text-amber-300">
-              <Clock className="h-4 w-4" />
+          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-right space-y-0.5 shrink-0 self-start md:self-auto">
+            <div className="flex items-center md:justify-end gap-1 font-mono font-bold text-lg text-amber-800">
+              <Clock className="h-4 w-4 text-amber-600" />
               <span>ETA {displayEta} min</span>
             </div>
-            <p className="text-[11px] text-slate-400 font-mono">
+            <p className="text-[11px] text-slate-500 font-mono">
               {displayDistance} km to {currentCase.destinationHospital.name}
             </p>
           </div>
         </div>
 
         {/* Demographics & Metadata strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800/80 text-xs">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-3 border-t border-slate-200 text-xs">
           <div className="space-y-0.5">
-            <span className="text-slate-500 block text-[10px] uppercase">Patient</span>
-            <span className="font-bold text-white">{currentCase.patientAge}y &middot; {currentCase.patientSex}</span>
+            <span className="text-slate-500 block text-[10px] uppercase font-semibold">Patient</span>
+            <span className="font-bold text-slate-900">{currentCase.patientAge}y &middot; {currentCase.patientSex}</span>
           </div>
           <div className="space-y-0.5">
-            <span className="text-slate-500 block text-[10px] uppercase">Patient Count</span>
-            <span className="font-bold text-white">{currentCase.patientCount} Patient{currentCase.patientCount > 1 ? 's' : ''}</span>
+            <span className="text-slate-500 block text-[10px] uppercase font-semibold">Patient Count</span>
+            <span className="font-bold text-slate-900">{currentCase.patientCount} Patient{currentCase.patientCount > 1 ? 's' : ''}</span>
           </div>
           <div className="space-y-0.5">
-            <span className="text-slate-500 block text-[10px] uppercase">Assigned Unit</span>
-            <span className="font-bold text-orange-400 font-mono">{currentCase.assignedUnitId}</span>
+            <span className="text-slate-500 block text-[10px] uppercase font-semibold">Assigned Unit</span>
+            <span className="font-bold text-blue-700 font-mono">{currentCase.assignedUnitId}</span>
           </div>
           <div className="space-y-0.5">
-            <span className="text-slate-500 block text-[10px] uppercase">Last Sync</span>
-            <span className="font-bold text-slate-300">{currentCase.lastUpdated}</span>
+            <span className="text-slate-500 block text-[10px] uppercase font-semibold">Last Sync</span>
+            <span className="font-bold text-slate-700 font-mono">{currentCase.lastUpdated}</span>
           </div>
         </div>
       </div>

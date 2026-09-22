@@ -79,15 +79,15 @@ export default function CaseDetailPage() {
 
   if (!caseData) {
     return (
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-12 text-center space-y-4">
-        <AlertTriangle className="mx-auto h-12 w-12 text-amber-400" />
-        <h2 className="text-lg font-bold text-white">Emergency Case Not Found</h2>
-        <p className="text-xs text-slate-400 max-w-md mx-auto">
-          The requested Case ID <strong className="font-mono text-slate-200">{caseId}</strong> was not found in the active emergency registry.
+      <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center space-y-4 shadow-sm">
+        <AlertTriangle className="mx-auto h-12 w-12 text-amber-500" />
+        <h2 className="text-lg font-bold text-slate-900">Emergency Case Not Found</h2>
+        <p className="text-xs text-slate-500 max-w-md mx-auto">
+          The requested Case ID <strong className="font-mono text-slate-800">{caseId}</strong> was not found in the active emergency registry.
         </p>
         <Link
           href="/hospital/cases"
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-semibold hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm"
         >
           <ArrowLeft className="h-4 w-4" />
           <span>Back to Emergency Queue</span>
@@ -149,7 +149,7 @@ export default function CaseDetailPage() {
         <div className="flex items-center gap-3">
           <Link
             href="/hospital/cases"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-slate-200 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Emergency Cases Queue</span>
@@ -161,14 +161,14 @@ export default function CaseDetailPage() {
         </div>
 
         {/* Live Sync Status */}
-        <div className="flex items-center gap-2 text-xs text-slate-400">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="font-mono text-[11px]">LIVE COORDINATION CONSOLE</span>
+        <div className="flex items-center gap-2 text-xs text-slate-500">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="font-mono text-[11px] font-medium">LIVE COORDINATION CONSOLE</span>
         </div>
       </div>
 
       {/* 1. EMERGENCY COMMAND HEADER */}
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5 sm:p-6 space-y-4 shadow-xl">
+      <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 space-y-4 shadow-sm">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
           {/* Left Block: Case ID, Priority, Status, Demographics & Location */}
           <div className="space-y-2.5">
@@ -176,69 +176,69 @@ export default function CaseDetailPage() {
               <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">
                 CASE ID
               </span>
-              <h1 className="text-2xl sm:text-3xl font-mono font-extrabold text-white tracking-tight">
+              <h1 className="text-2xl sm:text-3xl font-mono font-extrabold text-slate-900 tracking-tight">
                 {caseData.id}
               </h1>
               <PriorityBadge priority={caseData.operationalPriority} size="md" />
               <StatusBadge status={caseData.status} size="md" />
               {caseData.assignedBay && (
-                <span className="px-2.5 py-0.5 rounded-md text-xs font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-700/60">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                   {caseData.assignedBay}
                 </span>
               )}
             </div>
 
             {/* Patient & Incident */}
-            <div className="flex flex-wrap items-center gap-2.5 text-sm text-slate-200">
-              <span className="px-2.5 py-0.5 rounded bg-blue-950 text-blue-300 font-mono text-xs font-bold border border-blue-800">
+            <div className="flex flex-wrap items-center gap-2.5 text-sm text-slate-700">
+              <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 font-mono text-xs font-bold border border-blue-200">
                 {caseData.patientAge} &bull; {caseData.patientSex}
               </span>
-              <span className="text-slate-500 font-bold">&mdash;</span>
-              <span className="text-base sm:text-lg font-bold text-white tracking-tight">
+              <span className="text-slate-300 font-bold">&mdash;</span>
+              <span className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
                 {caseData.incidentType}
               </span>
             </div>
 
             {/* Operational Context Metadata Strip */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-2 pt-1 text-xs text-slate-400 font-mono">
-              <div className="bg-slate-950/60 px-3 py-1.5 rounded-xl border border-slate-800/80 truncate">
-                <span className="text-slate-500 block text-[10px] uppercase font-bold">Reported Location</span>
-                <strong className="text-slate-200 font-sans truncate block">{caseData.reportedLocation}</strong>
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-2 pt-1 text-xs text-slate-600 font-mono">
+              <div className="bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 truncate">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Reported Location</span>
+                <strong className="text-slate-800 font-sans truncate block">{caseData.reportedLocation}</strong>
               </div>
-              <div className="bg-slate-950/60 px-3 py-1.5 rounded-xl border border-slate-800/80">
-                <span className="text-slate-500 block text-[10px] uppercase font-bold">Alerted At</span>
-                <strong className="text-slate-200">{caseData.timeAlerted}</strong>
+              <div className="bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Alerted At</span>
+                <strong className="text-slate-800">{caseData.timeAlerted}</strong>
               </div>
-              <div className="bg-slate-950/60 px-3 py-1.5 rounded-xl border border-slate-800/80 truncate">
-                <span className="text-slate-500 block text-[10px] uppercase font-bold">Assigned EMS</span>
-                <strong className="text-slate-200">{caseData.emsUnit.unitId} ({caseData.emsUnit.vehicleType})</strong>
+              <div className="bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 truncate">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Assigned EMS</span>
+                <strong className="text-slate-800">{caseData.emsUnit.unitId} ({caseData.emsUnit.vehicleType})</strong>
               </div>
-              <div className="bg-slate-950/60 px-3 py-1.5 rounded-xl border border-slate-800/80 truncate">
-                <span className="text-slate-500 block text-[10px] uppercase font-bold">Current Destination</span>
-                <strong className="text-emerald-400 truncate block">{hospitalProfile.name}</strong>
+              <div className="bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 truncate">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Current Destination</span>
+                <strong className="text-emerald-700 truncate block">{hospitalProfile.name}</strong>
               </div>
             </div>
           </div>
 
           {/* Right Block: Prominent Command ETA Card */}
-          <div className="bg-slate-950/90 p-4 sm:p-5 rounded-2xl border border-slate-800 shrink-0 text-right space-y-1 shadow-inner min-w-[170px]">
-            <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">
+          <div className="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 shrink-0 text-right space-y-1 shadow-sm min-w-[170px]">
+            <span className="text-[10px] text-slate-500 uppercase font-bold tracking-wider block">
               Estimated Transit Arrival
             </span>
-            <div className="text-3xl font-mono font-black text-red-400 flex items-center justify-end gap-2">
-              <Clock className="h-6 w-6 text-red-400 animate-pulse" />
+            <div className="text-3xl font-mono font-black text-rose-700 flex items-center justify-end gap-2">
+              <Clock className="h-6 w-6 text-rose-600 animate-pulse" />
               <span>{displayEta}</span>
             </div>
-            <span className="text-xs text-slate-400 font-mono block">
+            <span className="text-xs text-slate-500 font-mono block">
               {displayDistance} km &middot; via {caseData.emsUnit.unitId}
             </span>
           </div>
         </div>
 
         {/* 2. OPERATIONAL ACTION BAR */}
-        <div className="pt-3.5 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
+        <div className="pt-3.5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
           {bayError && (
-            <div className="w-full p-2.5 bg-rose-950/40 border border-rose-500/30 rounded-xl text-rose-300 text-xs flex items-center gap-2">
+            <div className="w-full p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-xs flex items-center gap-2">
               <span>⚠️</span>
               <span>{bayError}</span>
             </div>
@@ -249,7 +249,7 @@ export default function CaseDetailPage() {
               {/* Dominant Primary Action */}
               <button
                 onClick={() => setIsAckModalOpen(true)}
-                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-lg shadow-blue-900/40 transition-all focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-blue-400"
               >
                 <CheckCircle2 className="h-4 w-4" />
                 <span>Acknowledge Case &amp; Stage ED</span>
@@ -258,21 +258,21 @@ export default function CaseDetailPage() {
               {/* Clearly Separated Destructive Action */}
               <button
                 onClick={() => setIsDivertModalOpen(true)}
-                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-950/30 hover:bg-red-900/50 text-red-300 border border-red-500/30 text-xs font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-red-400"
+                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-rose-400"
               >
-                <AlertOctagon className="h-4 w-4 text-red-400" />
+                <AlertOctagon className="h-4 w-4 text-rose-600" />
                 <span>Reject / Divert</span>
               </button>
             </div>
           )}
 
           {isAcknowledged && (
-            <div className="flex flex-wrap items-center justify-between gap-3 w-full bg-blue-950/20 p-3.5 rounded-xl border border-blue-500/30">
-              <div className="flex items-center gap-2.5 text-xs text-blue-200">
-                <ShieldCheck className="h-5 w-5 text-blue-400 shrink-0" />
+            <div className="flex flex-wrap items-center justify-between gap-3 w-full bg-blue-50/60 p-3.5 rounded-xl border border-blue-200">
+              <div className="flex items-center gap-2.5 text-xs text-blue-900">
+                <ShieldCheck className="h-5 w-5 text-blue-600 shrink-0" />
                 <div>
                   <span className="font-bold">Case Acknowledged &amp; ED Staged</span>
-                  <p className="text-slate-400 text-[11px]">
+                  <p className="text-slate-600 text-[11px]">
                     Acknowledged by {caseData.acknowledgedBy || hospitalProfile.onDutyCoordinator} at {caseData.timeAcknowledged || '14:08 UTC'}.
                   </p>
                 </div>
@@ -280,11 +280,11 @@ export default function CaseDetailPage() {
 
               {/* Bay Assignment Dropdown */}
               <div className="flex items-center gap-2">
-                <span className="text-xs text-slate-300 font-medium">Assign Bay:</span>
+                <span className="text-xs text-slate-700 font-medium">Assign Bay:</span>
                 <select
                   value={selectedBay}
                   onChange={(e) => handleBaySelect(e.target.value)}
-                  className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs text-slate-200 focus:border-blue-500 focus:outline-none"
+                  className="rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-800 focus:border-blue-600 focus:outline-none"
                 >
                   <option value="">{caseData.assignedBay ? `Assigned: ${caseData.assignedBay}` : 'Select Available Bay...'}</option>
                   {availableBays.map((b) => (
@@ -298,11 +298,11 @@ export default function CaseDetailPage() {
           )}
 
           {isDiverted && (
-            <div className="w-full bg-red-950/30 p-3.5 rounded-xl border border-red-500/40 text-xs text-red-300 flex items-center gap-2.5">
-              <AlertOctagon className="h-5 w-5 text-red-400 shrink-0" />
+            <div className="w-full bg-rose-50 p-3.5 rounded-xl border border-rose-200 text-xs text-rose-900 flex items-center gap-2.5">
+              <AlertOctagon className="h-5 w-5 text-rose-600 shrink-0" />
               <div>
                 <span className="font-bold">Case Diverted / Rejected by Hospital</span>
-                <p className="text-red-400 text-[11px]">
+                <p className="text-rose-700 text-[11px]">
                   Reason: {caseData.divertReason || 'Specialty Unavailable'}. Secondary regional matching active.
                 </p>
               </div>
@@ -313,9 +313,9 @@ export default function CaseDetailPage() {
           <div className="flex justify-end w-full pt-1">
             <button
               onClick={() => setIsOverrideModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-amber-300 border border-amber-500/30 text-xs font-semibold transition focus:outline-none focus:ring-2 focus:ring-amber-400"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-semibold transition focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
-              <Sliders className="h-3.5 w-3.5 text-amber-400" />
+              <Sliders className="h-3.5 w-3.5 text-slate-500" />
               <span>Record Human Clinical Override</span>
             </button>
           </div>
@@ -336,15 +336,15 @@ export default function CaseDetailPage() {
           <EmsStatusCard emsUnit={caseData.emsUnit} />
 
           {/* 7. Operational Readiness Checklist / Handover Staging */}
-          <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-5 space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
+          <div className="rounded-2xl border border-slate-200 bg-white p-5 space-y-4 shadow-sm">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <CheckSquare className="h-4 w-4 text-emerald-400" />
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+                <CheckSquare className="h-4 w-4 text-emerald-600" />
+                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
                   Operational Readiness Checklist
                 </h3>
               </div>
-              <span className="text-xs text-slate-400 font-mono">
+              <span className="text-xs text-slate-500 font-mono">
                 {caseData.readinessChecklist.filter(i => i.completed).length} of {caseData.readinessChecklist.length} Complete
               </span>
             </div>
@@ -355,22 +355,22 @@ export default function CaseDetailPage() {
                   key={item.id}
                   className={`flex items-start gap-3 p-3 rounded-xl border text-xs cursor-pointer transition-all ${
                     item.completed
-                      ? 'border-emerald-500/30 bg-emerald-950/20 text-emerald-200'
-                      : 'border-slate-800 bg-slate-950/60 text-slate-300 hover:bg-slate-800/40'
+                      ? 'border-emerald-200 bg-emerald-50/60 text-emerald-900'
+                      : 'border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100/60'
                   }`}
                 >
                   <input
                     type="checkbox"
                     checked={item.completed}
                     onChange={() => handleChecklistToggle(item.id, item.label, item.completed)}
-                    className="mt-0.5 accent-emerald-500 h-4 w-4 rounded"
+                    className="mt-0.5 accent-emerald-600 h-4 w-4 rounded"
                   />
                   <div className="space-y-0.5">
                     <span className={`block font-medium ${item.completed ? 'line-through opacity-80' : ''}`}>
                       {item.label}
                     </span>
-                    <span className="text-[10px] text-slate-400">
-                      Required for: <strong>{item.requiredFor}</strong>
+                    <span className="text-[10px] text-slate-500">
+                      Required for: <strong className="text-slate-700">{item.requiredFor}</strong>
                     </span>
                   </div>
                 </label>

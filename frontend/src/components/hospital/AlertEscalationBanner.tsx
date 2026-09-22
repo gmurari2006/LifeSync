@@ -34,7 +34,11 @@ export const AlertEscalationBanner: React.FC<AlertEscalationBannerProps> = ({
     return () => clearInterval(timer);
   }, [hospitalId]);
 
-  if (!escalationData || escalationData.total_unacknowledged_alerts === 0) {
+  if (
+    !escalationData || 
+    !Array.isArray(escalationData.escalations) || 
+    escalationData.total_unacknowledged_alerts === 0
+  ) {
     return null;
   }
 
@@ -72,39 +76,39 @@ export const AlertEscalationBanner: React.FC<AlertEscalationBannerProps> = ({
         const isTier2 = esc.escalation_tier === 'TIER_2_PUSH';
 
         const bannerClasses = isTier3
-          ? 'bg-rose-950/80 border-rose-500/80 text-rose-100 shadow-rose-950/50 animate-pulse'
+          ? 'bg-rose-50 border-rose-300 text-rose-950 shadow-sm'
           : isTier2
-          ? 'bg-orange-950/80 border-orange-500/80 text-orange-100 shadow-orange-950/50 animate-bounce-subtle'
-          : 'bg-amber-950/80 border-amber-500/80 text-amber-100 shadow-amber-950/50';
+          ? 'bg-amber-50 border-amber-300 text-amber-950 shadow-sm'
+          : 'bg-blue-50 border-blue-200 text-blue-950 shadow-sm';
 
         const badgeClasses = isTier3
           ? 'bg-rose-600 text-white'
           : isTier2
-          ? 'bg-orange-600 text-white'
-          : 'bg-amber-600 text-white';
+          ? 'bg-amber-600 text-white'
+          : 'bg-blue-600 text-white';
 
         return (
           <div
             key={esc.case_id}
-            className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl border backdrop-blur-md shadow-lg transition duration-300 ${bannerClasses}`}
+            className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl border shadow-sm transition duration-300 ${bannerClasses}`}
           >
             <div className="flex items-center gap-3">
-              <span className={`px-2.5 py-1 text-xs font-black uppercase tracking-wider rounded-lg ${badgeClasses}`}>
+              <span className={`px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded-lg shrink-0 ${badgeClasses}`}>
                 {isTier3 ? '🚨 TIER 3: DISPATCH ESCALATION' : isTier2 ? '⚠️ TIER 2: PUSH ESCALATION' : '⚡ TIER 1: UNACKNOWLEDGED ALERT'}
               </span>
               <div>
-                <div className="text-sm font-bold flex items-center gap-2">
+                <div className="text-sm font-bold text-slate-900 flex items-center gap-2 flex-wrap">
                   <span>Pre-alert unacknowledged for</span>
                   <span className="font-mono underline decoration-2">{esc.seconds_elapsed}s</span>
                   <span>— Case</span>
                   <Link
                     href={`/hospital/cases/${esc.case_code}`}
-                    className="font-mono font-black underline hover:text-white"
+                    className="font-mono font-black text-blue-700 underline hover:text-blue-800"
                   >
                     {esc.case_code}
                   </Link>
                 </div>
-                <p className="text-xs opacity-80 mt-0.5">
+                <p className="text-xs text-slate-600 mt-0.5">
                   {isTier3
                     ? '180s SLA breached. Regional Dispatch & Emergency Directors have been alerted.'
                     : isTier2
@@ -114,17 +118,17 @@ export const AlertEscalationBanner: React.FC<AlertEscalationBannerProps> = ({
               </div>
             </div>
 
-            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-end shrink-0">
               <Link
                 href={`/hospital/cases/${esc.case_code}`}
-                className="px-3.5 py-2 text-xs font-semibold rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-slate-700 transition"
+                className="px-3.5 py-2 text-xs font-semibold rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 shadow-sm transition"
               >
                 View Case
               </Link>
               <button
                 onClick={() => handleQuickAcknowledge(esc.case_code, esc.case_id)}
                 disabled={acknowledgingCaseId === esc.case_id}
-                className="px-4 py-2 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-950/40 transition disabled:opacity-50"
+                className="px-4 py-2 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm transition disabled:opacity-50"
               >
                 {acknowledgingCaseId === esc.case_id ? 'Acknowledging...' : 'Acknowledge Now'}
               </button>

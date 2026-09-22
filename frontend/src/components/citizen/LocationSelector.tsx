@@ -47,120 +47,116 @@ export function LocationSelector({
     <div className="space-y-6">
       {/* Location Section Header */}
       <div className="space-y-1 text-center sm:text-left">
-        <h2 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight flex items-center justify-center sm:justify-start gap-2">
-          <MapPin className="h-6 w-6 text-red-400" />
-          <span>Where is the emergency?</span>
+        <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight flex items-center justify-center sm:justify-start gap-2">
+          <MapPin className="h-6 w-6 text-red-600" />
+          <span>Where is the person located?</span>
         </h2>
-        <p className="text-xs sm:text-sm text-slate-400">
-          Accurate location enables nearest ambulance routing and hospital catchment matching.
+        <p className="text-xs sm:text-sm text-slate-500">
+          Location coordinates direct the responding ambulance and compute nearest capable hospital matching.
         </p>
       </div>
 
       {/* Simulated Location Box */}
-      <div className="rounded-2xl border border-blue-500/40 bg-slate-900/70 p-4 sm:p-5 space-y-3 shadow-lg shadow-blue-950/20">
+      <div className="rounded-xl border border-blue-200 bg-blue-50/40 p-4 sm:p-5 space-y-3 shadow-xs">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-xs font-bold text-slate-200">
-              Location Captured
-            </span>
+          <div className="flex items-center gap-2 text-xs font-semibold text-blue-700">
+            <Navigation className="h-4 w-4 animate-pulse" />
+            <span>Simulated GPS Auto-Pin</span>
           </div>
-
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800 font-semibold">
-            {location.accuracyText}
+          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 border border-blue-200">
+            {location.accuracyText || 'High Accuracy'}
           </span>
         </div>
 
         {!isManual ? (
-          <div className="space-y-2 bg-slate-950/80 p-3.5 rounded-xl border border-slate-800">
-            <div className="flex items-start gap-2.5">
-              <Navigation className="h-4 w-4 text-blue-400 shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-bold text-white leading-snug">
-                  {location.address}
-                </p>
-                {location.landmark && (
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    Landmark: <span className="text-slate-300">{location.landmark}</span>
-                  </p>
-                )}
-              </div>
+          <div className="space-y-2">
+            <div className="p-3 bg-white rounded-lg border border-slate-200 shadow-xs space-y-1">
+              <span className="text-xs font-bold text-slate-900 block">
+                {location.address}
+              </span>
+              {location.landmark && (
+                <span className="text-xs text-slate-500 block">
+                  Landmark: {location.landmark}
+                </span>
+              )}
             </div>
 
-            {location.coordinates && (
-              <div className="pt-2 border-t border-slate-900 flex items-center justify-between text-[11px] text-slate-400 font-mono">
-                <span>GPS Vector: {location.coordinates.latitude.toFixed(4)}° N, {location.coordinates.longitude.toFixed(4)}° E</span>
-                <span className="text-emerald-400 flex items-center gap-1">
-                  <CheckCircle2 className="h-3 w-3" /> Pin Verified
-                </span>
-              </div>
-            )}
+            <div className="flex flex-wrap items-center gap-2 pt-1">
+              <button
+                type="button"
+                onClick={handleSimulateLocation}
+                className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-xs transition-colors"
+              >
+                Refresh Simulated GPS Pin
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsManual(true)}
+                className="px-3 py-1.5 rounded-lg bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-xs transition-colors inline-flex items-center gap-1.5"
+              >
+                <Edit3 className="h-3.5 w-3.5" />
+                <span>Adjust Address Manually</span>
+              </button>
+            </div>
           </div>
         ) : (
-          <div className="space-y-3 bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+          <div className="space-y-3 pt-1">
             <div>
-              <label className="text-[11px] font-semibold text-slate-400 block mb-1">
-                Street / Area Address:
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Street Address / Cross Street:
               </label>
               <input
                 type="text"
                 value={manualAddress}
                 onChange={(e) => setManualAddress(e.target.value)}
-                onBlur={handleManualSave}
-                placeholder="e.g. Sector 48 Market, Sohna Road"
-                className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none"
+                placeholder="e.g. Sector 48, Golf Course Extension Rd"
+                className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2 text-xs text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
               />
             </div>
-
             <div>
-              <label className="text-[11px] font-semibold text-slate-400 block mb-1">
-                Prominent Landmark:
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Landmark / Floor / Apartment (Optional):
               </label>
               <input
                 type="text"
                 value={manualLandmark}
                 onChange={(e) => setManualLandmark(e.target.value)}
-                onBlur={handleManualSave}
-                placeholder="e.g. Near University Main Gate"
-                className="w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none"
+                placeholder="e.g. Near Metro Pillar 142, Gate 2"
+                className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2 text-xs text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
               />
+            </div>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={handleManualSave}
+                className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-xs"
+              >
+                Update Pin
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsManual(false)}
+                className="px-3.5 py-1.5 rounded-lg bg-white border border-slate-300 text-slate-700 text-xs font-semibold"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         )}
-
-        {/* Location Toggle Action Buttons */}
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-          <button
-            type="button"
-            onClick={handleSimulateLocation}
-            className="text-xs text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1"
-          >
-            <Navigation className="h-3.5 w-3.5" />
-            <span>Use Simulated Auto-Pin</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setIsManual(!isManual)}
-            className="text-xs text-slate-400 hover:text-slate-200 font-medium flex items-center gap-1"
-          >
-            <Edit3 className="h-3.5 w-3.5" />
-            <span>{isManual ? 'Done Editing' : 'Edit Manually'}</span>
-          </button>
-        </div>
       </div>
 
-      {/* Optional Additional Information */}
-      <div className="space-y-2 pt-2 border-t border-slate-800/80">
-        <label className="text-sm font-bold text-white flex items-center gap-2">
-          <MessageSquare className="h-4 w-4 text-purple-400" />
-          <span>Anything else responders should know? (Optional)</span>
+      {/* Additional Notes Area */}
+      <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-2 shadow-xs">
+        <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+          <MessageSquare className="h-4 w-4 text-blue-600" />
+          <span>Additional scene observations (Optional):</span>
         </label>
         <textarea
           value={additionalNotes}
           onChange={(e) => onNotesChange(e.target.value)}
-          placeholder="Example: person is trapped in car, bleeding from arm, family member is nearby..."
-          className="w-full rounded-2xl border border-slate-800 bg-slate-900/60 p-3.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 min-h-[90px]"
+          placeholder="e.g. Patient is conscious and sitting upright. Bystanders applying direct pressure to left arm."
+          rows={3}
+          className="w-full rounded-lg border border-slate-300 bg-white p-3 text-xs text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
         />
       </div>
     </div>

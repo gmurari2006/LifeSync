@@ -261,20 +261,20 @@ export function HospitalMatchingCard({
   // -------------------------------------------------------------
   if (isLoading) {
     return (
-      <div className="rounded-2xl border border-sky-500/20 bg-slate-900/70 p-5 sm:p-6 shadow-xl animate-pulse space-y-4">
+      <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-xs animate-pulse space-y-4">
         <div className="flex items-center justify-between">
-          <div className="h-5 w-60 bg-sky-900/30 rounded-lg" />
-          <div className="h-5 w-24 bg-sky-900/30 rounded-lg" />
+          <div className="h-5 w-60 bg-blue-100 rounded-lg" />
+          <div className="h-5 w-24 bg-blue-100 rounded-lg" />
         </div>
-        <div className="p-3 bg-slate-950/60 rounded-xl space-y-2">
-          <div className="h-4 w-3/4 bg-slate-800 rounded" />
-          <div className="h-3 w-1/2 bg-slate-800/60 rounded" />
+        <div className="p-3 bg-slate-100 rounded-xl space-y-2">
+          <div className="h-4 w-3/4 bg-slate-200 rounded" />
+          <div className="h-3 w-1/2 bg-slate-200 rounded" />
         </div>
-        <div className="h-20 bg-slate-950/60 rounded-xl" />
+        <div className="h-20 bg-slate-100 rounded-xl" />
         <div className="grid grid-cols-3 gap-2.5">
-          <div className="h-12 bg-slate-950/60 rounded-xl" />
-          <div className="h-12 bg-slate-950/60 rounded-xl" />
-          <div className="h-12 bg-slate-950/60 rounded-xl" />
+          <div className="h-12 bg-slate-100 rounded-xl" />
+          <div className="h-12 bg-slate-100 rounded-xl" />
+          <div className="h-12 bg-slate-100 rounded-xl" />
         </div>
       </div>
     );
@@ -285,20 +285,20 @@ export function HospitalMatchingCard({
   // -------------------------------------------------------------
   if (errorMessage && !matchingResult && !isConfirmed) {
     return (
-      <div className="rounded-2xl border border-red-500/30 bg-slate-900/70 p-6 text-center space-y-3.5 shadow-xl">
-        <AlertOctagon className="h-8 w-8 text-red-400 mx-auto" />
+      <div className="rounded-2xl border border-red-200 bg-white p-6 text-center space-y-3.5 shadow-xs">
+        <AlertOctagon className="h-8 w-8 text-red-600 mx-auto" />
         <div className="space-y-1">
-          <h4 className="text-sm font-bold text-white uppercase tracking-wider">
+          <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
             Hospital Matching &amp; Readiness Intelligence
           </h4>
-          <p className="text-xs text-slate-300">
+          <p className="text-xs text-slate-600">
             Unable to retrieve hospital recommendations.
           </p>
         </div>
         <button
           onClick={loadMatchingData}
           disabled={isLoading}
-          className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all inline-flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+          className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-all inline-flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-xs"
         >
           <RotateCw className="h-3.5 w-3.5" />
           <span>Retry</span>
@@ -312,20 +312,20 @@ export function HospitalMatchingCard({
   // -------------------------------------------------------------
   if ((!matchingResult || matchingResult.candidates.length === 0) && !isConfirmed) {
     return (
-      <div className="rounded-2xl border border-sky-500/20 bg-slate-900/60 p-6 text-center space-y-3.5 shadow-xl">
-        <Compass className="h-8 w-8 text-sky-400 mx-auto opacity-80" />
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 text-center space-y-3.5 shadow-xs">
+        <Compass className="h-8 w-8 text-blue-600 mx-auto opacity-80" />
         <div className="space-y-1">
-          <h4 className="text-sm font-bold text-white uppercase tracking-wider">
+          <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
             Destination Recommendation
           </h4>
-          <p className="text-xs text-slate-400 max-w-md mx-auto">
+          <p className="text-xs text-slate-600 max-w-md mx-auto">
             No recommendation calculated yet. Evaluates regional ED capabilities, available resuscitation bays, and ETA proximity.
           </p>
         </div>
         <button
           onClick={handleRecalculate}
           disabled={isProcessing}
-          className="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition-all inline-flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-sky-400"
+          className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all inline-flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-xs"
         >
           <RotateCw className={`h-3.5 w-3.5 ${isProcessing ? 'animate-spin' : ''}`} />
           <span>Calculate Destination Recommendations</span>
@@ -335,26 +335,23 @@ export function HospitalMatchingCard({
   }
 
   return (
-    <div className="rounded-2xl border border-sky-500/30 bg-slate-900/80 p-5 sm:p-6 space-y-4 shadow-xl relative overflow-hidden">
-      {/* Background ambient glow */}
-      <div className="absolute top-0 right-0 w-72 h-72 bg-sky-500/5 rounded-full blur-3xl pointer-events-none" />
-
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 space-y-4 shadow-xs relative overflow-hidden">
       {/* Main Card Header */}
-      <div className="flex flex-wrap items-center justify-between gap-2.5 pb-3.5 border-b border-sky-500/20">
+      <div className="flex flex-wrap items-center justify-between gap-2.5 pb-3.5 border-b border-slate-200">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-sky-500/10 border border-sky-500/30 text-sky-400 shrink-0">
+          <div className="p-2.5 rounded-xl bg-blue-50 border border-blue-200 text-blue-600 shrink-0">
             <Compass className="h-5 w-5" />
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <h3 className="text-sm font-extrabold text-white tracking-wide uppercase">
+              <h3 className="text-sm font-bold text-slate-900 tracking-wide uppercase">
                 Hospital Matching &amp; Readiness Intelligence
               </h3>
-              <span className="px-2 py-0.5 rounded-full bg-sky-950 text-sky-300 border border-sky-700/60 text-[10px] font-mono font-bold">
+              <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-800 border border-blue-200 text-[10px] font-mono font-bold">
                 DETERMINISTIC
               </span>
             </div>
-            <p className="text-[11px] text-sky-300/90 font-medium mt-0.5">
+            <p className="text-[11px] text-slate-500 font-medium mt-0.5">
               Multi-Factor Destination Selection &middot; 40% Capability &middot; 35% ETA &middot; 25% Bays
             </p>
           </div>
@@ -365,9 +362,9 @@ export function HospitalMatchingCard({
             onClick={handleRecalculate}
             disabled={isProcessing}
             title="Recalculate Real-Time Suitability"
-            className="px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition-all disabled:opacity-50 inline-flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-sky-400"
+            className="px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-semibold transition-all disabled:opacity-50 inline-flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-xs"
           >
-            <RotateCw className={`h-3.5 w-3.5 text-sky-400 ${isProcessing ? 'animate-spin' : ''}`} />
+            <RotateCw className={`h-3.5 w-3.5 text-blue-600 ${isProcessing ? 'animate-spin' : ''}`} />
             <span>Recalculate</span>
           </button>
         </div>
@@ -375,30 +372,30 @@ export function HospitalMatchingCard({
 
       {/* Operational Success Banner */}
       {successMessage && (
-        <div className="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/40 text-xs text-emerald-300 flex items-center justify-between gap-2">
+        <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-            <span>{successMessage}</span>
+            <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+            <span className="font-medium">{successMessage}</span>
           </div>
           <button
             onClick={() => setSuccessMessage(null)}
-            className="text-emerald-400 hover:text-white text-xs font-mono"
+            className="text-emerald-700 hover:text-emerald-900 text-xs font-mono"
           >
             &times;
           </button>
         </div>
       )}
 
-      {/* Real Operational Error Banner (Sanitized — NEVER show generic 'Not Found' when data exists) */}
+      {/* Real Operational Error Banner */}
       {errorMessage && !errorMessage.toLowerCase().includes('not found') && (
-        <div className="p-3 rounded-xl bg-red-950/40 border border-red-500/40 text-xs text-red-300 flex items-center justify-between gap-2">
+        <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-xs text-red-800 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <AlertOctagon className="h-4 w-4 text-red-400 shrink-0" />
+            <AlertOctagon className="h-4 w-4 text-red-600 shrink-0" />
             <span>{errorMessage}</span>
           </div>
           <button
             onClick={() => setErrorMessage(null)}
-            className="text-red-400 hover:text-white text-xs font-mono"
+            className="text-red-600 hover:text-red-900 text-xs font-mono"
           >
             &times;
           </button>
@@ -409,17 +406,17 @@ export function HospitalMatchingCard({
           STATE C / PRIORITY 1: CONFIRMED FINAL DESTINATION PANEL
           ------------------------------------------------------------- */}
       {isConfirmed && (
-        <div className="p-4 rounded-xl bg-emerald-950/30 border border-emerald-500/50 space-y-3 shadow-inner">
+        <div className="p-4 rounded-xl bg-emerald-50/80 border border-emerald-300 space-y-3 shadow-xs">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500 text-slate-950 text-[10px] font-black uppercase tracking-wider flex items-center gap-1">
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-xs">
                 <CheckCircle2 className="h-3 w-3" /> CONFIRMED FINAL DESTINATION
               </span>
-              <span className="px-2 py-0.5 rounded-md bg-emerald-900/60 text-emerald-300 border border-emerald-700/60 text-[10px] font-mono font-bold">
+              <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 border border-emerald-200 text-[10px] font-mono font-bold">
                 HUMAN CONFIRMED
               </span>
             </div>
-            <span className="text-[11px] font-mono text-emerald-300 font-bold">
+            <span className="text-[11px] font-mono text-emerald-900 font-bold">
               ETA: {confirmedCandidate?.eta_minutes != null ? `${confirmedCandidate.eta_minutes} min` : '3 min'} &middot;{' '}
               {confirmedCandidate?.distance_km != null ? `${confirmedCandidate.distance_km} km` : '0.5 km'}
             </span>
@@ -427,12 +424,12 @@ export function HospitalMatchingCard({
 
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
             <div className="space-y-0.5">
-              <h4 className="text-base sm:text-lg font-extrabold text-white">
+              <h4 className="text-base sm:text-lg font-bold text-slate-900">
                 {confirmedCandidate?.hospital_name || 'CityCare General Hospital'}
               </h4>
-              <p className="text-xs text-emerald-200/80">
+              <p className="text-xs text-slate-600">
                 {confirmedCandidate?.trauma_level || 'Level 1 Trauma Center'} &middot; Available Bays:{' '}
-                <strong className="text-white">
+                <strong className="text-slate-900 font-bold">
                   {confirmedCandidate?.available_bays != null
                     ? `${confirmedCandidate.available_bays} / ${confirmedCandidate.total_bays ?? 12}`
                     : '5 / 12'}
@@ -447,7 +444,7 @@ export function HospitalMatchingCard({
                   setIsRejectModalOpen(true);
                 }}
                 disabled={isProcessing}
-                className="px-3.5 py-1.5 rounded-xl bg-red-950/50 hover:bg-red-900/70 border border-red-500/40 text-red-300 text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-red-400"
+                className="px-3.5 py-1.5 rounded-xl bg-white hover:bg-red-50 border border-red-200 text-red-700 text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-red-400 shadow-xs"
               >
                 Reject / Change
               </button>
@@ -460,12 +457,12 @@ export function HospitalMatchingCard({
           STATE D: DESTINATION DIVERSION ACTIVE
           ------------------------------------------------------------- */}
       {isDiverted && (
-        <div className="p-4 rounded-xl bg-amber-950/30 border border-amber-500/40 space-y-2 text-xs">
-          <div className="flex items-center gap-2 text-amber-300 font-bold uppercase tracking-wider text-[11px]">
-            <AlertTriangle className="h-4 w-4 text-amber-400 shrink-0" />
+        <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 space-y-2 text-xs">
+          <div className="flex items-center gap-2 text-amber-800 font-bold uppercase tracking-wider text-[11px]">
+            <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0" />
             <span>DESTINATION DIVERSION ACTIVE</span>
           </div>
-          <p className="text-slate-300 leading-relaxed">
+          <p className="text-slate-700 leading-relaxed">
             Primary destination diversion logged. Alternative regional facilities recomputed below. Human confirmation required to finalize new transport target.
           </p>
         </div>
@@ -474,15 +471,15 @@ export function HospitalMatchingCard({
       {/* -------------------------------------------------------------
           SYSTEM RECOMMENDATION BANNER
           ------------------------------------------------------------- */}
-      <div className="p-3 rounded-xl bg-sky-950/30 border border-sky-500/30 text-xs text-sky-200 flex items-start gap-2.5">
-        <ShieldCheck className="h-4 w-4 text-sky-400 shrink-0 mt-0.5" />
+      <div className="p-3.5 rounded-xl bg-blue-50/60 border border-blue-200 text-xs text-slate-700 flex items-start gap-2.5">
+        <ShieldCheck className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
         <div className="space-y-0.5">
-          <p className="font-bold text-white text-xs tracking-wide">
+          <p className="font-bold text-slate-900 text-xs tracking-wide">
             {isConfirmed
               ? 'Recommendation System Active'
               : 'System Recommendation — Final destination requires authorized human confirmation.'}
           </p>
-          <p className="text-[11px] text-sky-300/80 leading-relaxed">
+          <p className="text-[11px] text-slate-600 leading-relaxed">
             Recommendations are computed using verified clinical packet fields, real-time ED bay availability, and simulated travel ETA. Final destination is established strictly through authorized human clinical action.
           </p>
         </div>
@@ -490,7 +487,7 @@ export function HospitalMatchingCard({
 
       {/* Informative note if recommendation API has 0 candidates but confirmed destination is active */}
       {isConfirmed && (!matchingResult?.candidates || matchingResult.candidates.length === 0) && (
-        <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 text-xs text-slate-400 flex items-center gap-2">
+        <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-center gap-2">
           <Info className="h-4 w-4 text-slate-400 shrink-0" />
           <span>Recommendation unavailable — confirmed destination remains active.</span>
         </div>
@@ -502,11 +499,11 @@ export function HospitalMatchingCard({
       {matchingResult && matchingResult.candidates.length > 0 && (
         <div className="space-y-3 pt-1">
           <div className="flex items-center justify-between">
-            <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
-              <Layers className="h-4 w-4 text-sky-400" />
+            <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+              <Layers className="h-4 w-4 text-blue-600" />
               <span>{isConfirmed ? 'Alternative Regional Facilities' : 'Ranked Hospital Recommendations'}</span>
             </h4>
-            <span className="text-[11px] text-slate-400 font-mono">
+            <span className="text-[11px] text-slate-500 font-mono">
               {eligibleCandidates.length} Eligible &middot; {excludedCandidates.length} Excluded
             </span>
           </div>
@@ -533,12 +530,12 @@ export function HospitalMatchingCard({
                   onClick={() => setSelectedCandidateId(candidate.hospital_id)}
                   className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
                     isThisConfirmed
-                      ? 'border-emerald-500/60 bg-emerald-950/15'
+                      ? 'border-emerald-300 bg-emerald-50/70 shadow-sm'
                       : isSelected
-                      ? 'border-sky-500/70 bg-slate-950 shadow-md'
+                      ? 'border-blue-500 bg-blue-50/30 shadow-sm ring-1 ring-blue-500/20'
                       : candidate.is_eligible
-                      ? 'border-slate-800 bg-slate-950/50 hover:border-slate-700'
-                      : 'border-red-900/30 bg-slate-950/30 opacity-75'
+                      ? 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50'
+                      : 'border-slate-200 bg-slate-50/60 opacity-80'
                   }`}
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
@@ -547,10 +544,10 @@ export function HospitalMatchingCard({
                       <span
                         className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-mono font-bold shrink-0 mt-0.5 ${
                           candidate.rank === 1
-                            ? 'bg-sky-500 text-slate-950'
+                            ? 'bg-blue-600 text-white'
                             : candidate.is_eligible
-                            ? 'bg-slate-800 text-slate-200'
-                            : 'bg-red-950 text-red-400 border border-red-800'
+                            ? 'bg-slate-100 text-slate-700 border border-slate-200'
+                            : 'bg-red-50 text-red-600 border border-red-200'
                         }`}
                       >
                         {candidate.rank || '—'}
@@ -558,21 +555,21 @@ export function HospitalMatchingCard({
 
                       <div>
                         <div className="flex flex-wrap items-center gap-1.5">
-                          <span className="font-extrabold text-white text-xs sm:text-sm">
+                          <span className="font-extrabold text-slate-900 text-xs sm:text-sm">
                             {candidate.hospital_name}
                           </span>
                           {isThisConfirmed && (
-                            <span className="px-2 py-0.2 rounded-full bg-emerald-500 text-slate-950 text-[9px] font-black uppercase">
+                            <span className="px-2 py-0.5 rounded-full bg-emerald-600 text-white text-[9px] font-black uppercase">
                               CONFIRMED
                             </span>
                           )}
                           {!candidate.is_eligible && (
-                            <span className="px-2 py-0.2 rounded-full bg-red-950 text-red-300 border border-red-800 text-[9px] font-bold uppercase">
+                            <span className="px-2 py-0.5 rounded-full bg-red-100 text-red-700 border border-red-200 text-[9px] font-bold uppercase">
                               EXCLUDED
                             </span>
                           )}
                         </div>
-                        <p className="text-[11px] text-slate-400 mt-0.5">
+                        <p className="text-[11px] text-slate-500 mt-0.5">
                           {candidate.trauma_level || 'General Emergency'} &middot; Status: {candidate.operational_status}
                         </p>
                       </div>
@@ -581,20 +578,20 @@ export function HospitalMatchingCard({
                     {/* Operational Telemetry & Score */}
                     <div className="flex items-center gap-3.5 text-xs font-mono self-end sm:self-auto shrink-0">
                       <div className="text-right">
-                        <span className="text-slate-500 text-[10px] block uppercase">ETA</span>
-                        <span className="text-amber-300 font-bold">
+                        <span className="text-slate-400 text-[10px] block uppercase">ETA</span>
+                        <span className="text-amber-700 font-bold">
                           {candidate.eta_minutes ?? '--'}m ({candidate.distance_km ?? '--'}km)
                         </span>
                       </div>
                       <div className="text-right">
-                        <span className="text-slate-500 text-[10px] block uppercase">Bays</span>
-                        <span className="text-emerald-400 font-bold">
+                        <span className="text-slate-400 text-[10px] block uppercase">Bays</span>
+                        <span className="text-emerald-700 font-bold">
                           {candidate.available_bays ?? 0}/{candidate.total_bays ?? 0}
                         </span>
                       </div>
                       <div className="text-right min-w-[45px]">
-                        <span className="text-slate-500 text-[10px] block uppercase">Score</span>
-                        <span className={`font-black ${candidate.is_eligible ? 'text-sky-400' : 'text-slate-600'}`}>
+                        <span className="text-slate-400 text-[10px] block uppercase">Score</span>
+                        <span className={`font-black ${candidate.is_eligible ? 'text-blue-700' : 'text-slate-400'}`}>
                           {suitability}
                         </span>
                       </div>
@@ -607,7 +604,7 @@ export function HospitalMatchingCard({
                             setIsConfirmModalOpen(true);
                           }}
                           disabled={isProcessing}
-                          className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold transition-all focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                          className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold transition-all focus:outline-none focus:ring-2 focus:ring-emerald-400 shadow-sm"
                         >
                           {isConfirmed ? 'Switch Destination' : 'Confirm'}
                         </button>
@@ -617,8 +614,8 @@ export function HospitalMatchingCard({
 
                   {/* Exclusion reason if ineligible */}
                   {!candidate.is_eligible && candidate.exclusion_reasons && candidate.exclusion_reasons.length > 0 && (
-                    <div className="mt-2 p-2 rounded-lg bg-red-950/40 border border-red-900/50 text-[11px] text-red-300 flex items-center gap-2">
-                      <AlertTriangle className="h-3.5 w-3.5 text-red-400 shrink-0" />
+                    <div className="mt-2 p-2 rounded-lg bg-red-50 border border-red-200 text-[11px] text-red-700 flex items-center gap-2">
+                      <AlertTriangle className="h-3.5 w-3.5 text-red-500 shrink-0" />
                       <span>Exclusion: {candidate.exclusion_reasons.join(', ')}</span>
                     </div>
                   )}
@@ -632,20 +629,20 @@ export function HospitalMatchingCard({
       {/* -------------------------------------------------------------
           DECISION AUDIT & DIVERSION LOG TOGGLE
           ------------------------------------------------------------- */}
-      <div className="pt-2 border-t border-slate-800">
+      <div className="pt-2 border-t border-slate-200">
         <button
           onClick={() => setShowHistory(!showHistory)}
-          className="w-full flex items-center justify-between p-2.5 rounded-xl bg-slate-950/60 hover:bg-slate-950 text-xs text-slate-300 font-bold transition-all"
+          className="w-full flex items-center justify-between p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs text-slate-700 font-bold transition-all"
         >
           <span className="flex items-center gap-2">
-            <Activity className="h-4 w-4 text-sky-400" />
+            <Activity className="h-4 w-4 text-blue-600" />
             <span>Decision Audit &amp; Diversion Logs ({decisionLogs.length})</span>
           </span>
           {showHistory ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
         </button>
 
         {showHistory && (
-          <div className="mt-2.5 p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
+          <div className="mt-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
             {decisionLogs.length === 0 ? (
               <p className="text-slate-500 text-center py-2 text-[11px]">
                 No explicit destination decisions or diversions recorded yet for this case.
@@ -654,26 +651,26 @@ export function HospitalMatchingCard({
               decisionLogs.map((log) => (
                 <div
                   key={log.id}
-                  className="p-2 rounded-lg bg-slate-900/80 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px]"
+                  className="p-2.5 rounded-lg bg-white border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px] shadow-sm"
                 >
                   <div className="space-y-0.5">
                     <div className="flex items-center gap-2">
                       <span
-                        className={`px-2 py-0.2 rounded text-[9px] font-black uppercase ${
+                        className={`px-2 py-0.5 rounded text-[9px] font-black uppercase ${
                           log.decision_type === 'DESTINATION_CONFIRMED'
-                            ? 'bg-emerald-950 text-emerald-300 border border-emerald-800'
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                             : log.decision_type === 'HOSPITAL_DIVERTED'
-                            ? 'bg-amber-950 text-amber-300 border border-amber-800'
-                            : 'bg-red-950 text-red-300 border border-red-800'
+                            ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                            : 'bg-red-50 text-red-700 border border-red-200'
                         }`}
                       >
                         {log.decision_type.replace('_', ' ')}
                       </span>
-                      <span className="font-bold text-white font-mono">{log.hospital_id}</span>
+                      <span className="font-bold text-slate-900 font-mono">{log.hospital_id}</span>
                     </div>
                     {log.reason_code && (
-                      <p className="text-slate-400">
-                        Reason: <span className="text-amber-300 font-mono">{log.reason_code}</span>
+                      <p className="text-slate-600">
+                        Reason: <span className="text-amber-700 font-mono font-medium">{log.reason_code}</span>
                         {log.reason_description ? ` — ${log.reason_description}` : ''}
                       </p>
                     )}
@@ -693,59 +690,59 @@ export function HospitalMatchingCard({
           MODAL: CONFIRM DESTINATION
           ------------------------------------------------------------- */}
       {isConfirmModalOpen && activeCandidate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-          <div className="w-full max-w-lg rounded-2xl border border-emerald-500/40 bg-slate-900 p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+          <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+                <div className="p-2 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-600">
                   <CheckCircle2 className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-extrabold text-white">
+                  <h3 className="text-base font-extrabold text-slate-900">
                     Confirm Hospital Destination
                   </h3>
-                  <p className="text-xs text-emerald-300 font-medium">
+                  <p className="text-xs text-emerald-700 font-medium">
                     Authorized Human Destination Assignment
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setIsConfirmModalOpen(false)}
-                className="text-slate-400 hover:text-white text-lg font-bold"
+                className="text-slate-400 hover:text-slate-600 text-lg font-bold"
               >
                 &times;
               </button>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
-              <span className="text-[10px] text-slate-400 uppercase font-bold block">Selected Facility</span>
-              <h4 className="text-base font-extrabold text-white">{activeCandidate.hospital_name}</h4>
-              <p className="text-xs text-slate-300">
+            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+              <span className="text-[10px] text-slate-500 uppercase font-bold block">Selected Facility</span>
+              <h4 className="text-base font-extrabold text-slate-900">{activeCandidate.hospital_name}</h4>
+              <p className="text-xs text-slate-600">
                 ETA: {activeCandidate.eta_minutes ?? '--'} min &middot; {activeCandidate.distance_km ?? '--'} km &middot; Available Bays: {activeCandidate.available_bays ?? 0}/{activeCandidate.total_bays ?? 0}
               </p>
             </div>
 
             <div className="space-y-3 text-xs">
               <div>
-                <label className="block text-slate-400 font-bold uppercase text-[10px] mb-1">
+                <label className="block text-slate-700 font-bold uppercase text-[10px] mb-1">
                   Confirming Actor Name
                 </label>
                 <input
                   type="text"
                   value={actorName}
                   onChange={(e) => setActorName(e.target.value)}
-                  className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                  className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:border-blue-600 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 font-bold uppercase text-[10px] mb-1">
+                <label className="block text-slate-700 font-bold uppercase text-[10px] mb-1">
                   Actor Role
                 </label>
                 <select
                   value={actorRole}
                   onChange={(e) => setActorRole(e.target.value as any)}
-                  className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                  className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:border-blue-600 focus:outline-none"
                 >
                   <option value="EMS_PARAMEDIC">EMS Paramedic / In-Field Unit</option>
                   <option value="ED_COORDINATOR">ED Coordinator / Triage Nurse</option>
@@ -754,7 +751,7 @@ export function HospitalMatchingCard({
               </div>
 
               <div>
-                <label className="block text-slate-400 font-bold uppercase text-[10px] mb-1">
+                <label className="block text-slate-700 font-bold uppercase text-[10px] mb-1">
                   Clinical / Routing Notes (Optional)
                 </label>
                 <textarea
@@ -762,7 +759,7 @@ export function HospitalMatchingCard({
                   onChange={(e) => setConfirmNotes(e.target.value)}
                   placeholder="e.g., Cath lab pre-alert requested. In-transit via direct arterial route."
                   rows={2}
-                  className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                  className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:border-blue-600 focus:outline-none"
                 />
               </div>
             </div>
@@ -770,14 +767,14 @@ export function HospitalMatchingCard({
             <div className="pt-2 flex items-center justify-end gap-2.5">
               <button
                 onClick={() => setIsConfirmModalOpen(false)}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-all"
+                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all"
               >
                 Cancel
               </button>
               <button
                 onClick={() => handleConfirmDestination(activeCandidate.hospital_id)}
                 disabled={isProcessing}
-                className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-lg shadow-emerald-950/50 transition-all inline-flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition-all inline-flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-400"
               >
                 <CheckCircle2 className="h-4 w-4" />
                 <span>Confirm &amp; Assign</span>
@@ -791,47 +788,47 @@ export function HospitalMatchingCard({
           MODAL: REJECT / DIVERT DESTINATION
           ------------------------------------------------------------- */}
       {isRejectModalOpen && activeCandidate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-          <div className="w-full max-w-lg rounded-2xl border border-red-500/40 bg-slate-900 p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+          <div className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400">
+                <div className="p-2 rounded-xl bg-red-50 border border-red-200 text-red-600">
                   <XCircle className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-extrabold text-white">
+                  <h3 className="text-base font-extrabold text-slate-900">
                     Reject / Change Destination
                   </h3>
-                  <p className="text-xs text-red-300 font-medium">
+                  <p className="text-xs text-red-700 font-medium">
                     Facility Inability to Accept &amp; Alternative Recalculation
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setIsRejectModalOpen(false)}
-                className="text-slate-400 hover:text-white text-lg font-bold"
+                className="text-slate-400 hover:text-slate-600 text-lg font-bold"
               >
                 &times;
               </button>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
-              <span className="text-[10px] text-slate-400 uppercase font-bold block">Current Destination to Divert</span>
-              <h4 className="text-base font-extrabold text-white">{activeCandidate.hospital_name}</h4>
-              <p className="text-xs text-slate-300">
-                Facility ID: <span className="font-mono text-slate-400">{activeCandidate.hospital_id}</span>
+            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+              <span className="text-[10px] text-slate-500 uppercase font-bold block">Current Destination to Divert</span>
+              <h4 className="text-base font-extrabold text-slate-900">{activeCandidate.hospital_name}</h4>
+              <p className="text-xs text-slate-600">
+                Facility ID: <span className="font-mono text-slate-700 font-medium">{activeCandidate.hospital_id}</span>
               </p>
             </div>
 
             <div className="space-y-3 text-xs">
               <div>
-                <label className="block text-slate-400 font-bold uppercase text-[10px] mb-1">
+                <label className="block text-slate-700 font-bold uppercase text-[10px] mb-1">
                   Reason Code
                 </label>
                 <select
                   value={rejectReason}
                   onChange={(e) => setRejectReason(e.target.value as any)}
-                  className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-white focus:border-red-500 focus:outline-none"
+                  className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:border-red-500 focus:outline-none"
                 >
                   <option value="MAXIMUM_SURGE_CAPACITY">Maximum Surge Capacity (All Bays Full)</option>
                   <option value="TRAUMA_TEAM_COMMITTED">Trauma / Surgical Team Committed</option>
@@ -843,7 +840,7 @@ export function HospitalMatchingCard({
               </div>
 
               <div>
-                <label className="block text-slate-400 font-bold uppercase text-[10px] mb-1">
+                <label className="block text-slate-700 font-bold uppercase text-[10px] mb-1">
                   Explanation / Clinical Rationale
                 </label>
                 <textarea
@@ -851,19 +848,19 @@ export function HospitalMatchingCard({
                   onChange={(e) => setRejectDescription(e.target.value)}
                   placeholder="Provide clinical rationale for diversion / rejection..."
                   rows={2}
-                  className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-white focus:border-red-500 focus:outline-none"
+                  className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:border-red-500 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 font-bold uppercase text-[10px] mb-1">
+                <label className="block text-slate-700 font-bold uppercase text-[10px] mb-1">
                   Authorized Actor
                 </label>
                 <input
                   type="text"
                   value={actorName}
                   onChange={(e) => setActorName(e.target.value)}
-                  className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-white focus:border-red-500 focus:outline-none"
+                  className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:border-red-500 focus:outline-none"
                 />
               </div>
             </div>
@@ -871,14 +868,14 @@ export function HospitalMatchingCard({
             <div className="pt-2 flex items-center justify-end gap-2.5">
               <button
                 onClick={() => setIsRejectModalOpen(false)}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-all"
+                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all"
               >
                 Cancel
               </button>
               <button
                 onClick={handleRejectDestination}
                 disabled={isProcessing}
-                className="px-5 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold shadow-lg shadow-red-950/50 transition-all inline-flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-red-400"
+                className="px-5 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold shadow-sm transition-all inline-flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-red-400"
               >
                 <AlertOctagon className="h-4 w-4" />
                 <span>Confirm Rejection &amp; Divert</span>

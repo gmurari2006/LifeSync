@@ -110,25 +110,24 @@ export default function CasesQueuePage() {
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-            <Inbox className="h-5 w-5 text-blue-400" />
+          <h1 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+            <Inbox className="h-5 w-5 text-blue-600" />
             <span>Emergency Case Queue</span>
           </h1>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-500">
             Real-time pre-arrival cases matched to CityCare Emergency Department
           </p>
         </div>
 
         {/* View Mode Toggle */}
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-900 border border-slate-800 self-start sm:self-auto">
+        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-100 border border-slate-200 self-start sm:self-auto">
           <button
             onClick={() => setViewMode('table')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               viewMode === 'table'
                 ? 'bg-blue-600 text-white shadow-sm'
-                : 'text-slate-400 hover:text-slate-200'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <TableIcon className="h-3.5 w-3.5" />
@@ -139,7 +138,7 @@ export default function CasesQueuePage() {
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               viewMode === 'grid'
                 ? 'bg-blue-600 text-white shadow-sm'
-                : 'text-slate-400 hover:text-slate-200'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <LayoutGrid className="h-3.5 w-3.5" />
@@ -149,7 +148,7 @@ export default function CasesQueuePage() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="space-y-3 rounded-2xl border border-slate-800 bg-slate-900/50 p-4">
+      <div className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
         {/* Search Input & Sort Dropdown */}
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
@@ -159,7 +158,7 @@ export default function CasesQueuePage() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search by Case ID, chief complaint, unit ID, location..."
-              className="w-full rounded-xl border border-slate-800 bg-slate-950 pl-10 pr-4 py-2 text-xs text-slate-100 placeholder-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full rounded-xl border border-slate-300 bg-white pl-10 pr-4 py-2 text-xs text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
             />
           </div>
 
@@ -168,7 +167,7 @@ export default function CasesQueuePage() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs text-slate-200 focus:border-blue-500 focus:outline-none"
+              className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs text-slate-800 focus:border-blue-600 focus:outline-none"
             >
               <option value="eta">Sort by: Shortest ETA</option>
               <option value="priority">Sort by: Highest Acuity</option>
@@ -178,15 +177,15 @@ export default function CasesQueuePage() {
         </div>
 
         {/* Status Tabs */}
-        <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-800/80">
+        <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-100">
           {statusTabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setStatusFilter(tab.id)}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 statusFilter === tab.id
-                  ? 'bg-blue-600/20 text-blue-300 border border-blue-500/40'
-                  : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
+                  ? 'bg-blue-50 text-blue-700 border border-blue-200 shadow-sm'
+                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
               }`}
             >
               {tab.label}
@@ -195,8 +194,8 @@ export default function CasesQueuePage() {
         </div>
 
         {/* Priority Filter Chips */}
-        <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-800/50">
-          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mr-2">
+        <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-100">
+          <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mr-2">
             Acuity:
           </span>
           {priorityOptions.map((opt) => (
@@ -205,8 +204,8 @@ export default function CasesQueuePage() {
               onClick={() => setPriorityFilter(opt.id)}
               className={`px-2.5 py-1 rounded-md text-xs font-medium border transition-all ${
                 priorityFilter === opt.id
-                  ? 'bg-slate-800 text-white border-slate-600 font-semibold'
-                  : 'bg-slate-950/40 text-slate-400 border-slate-800/80 hover:border-slate-700'
+                  ? 'bg-slate-900 text-white border-slate-900 font-semibold shadow-sm'
+                  : 'bg-slate-50 text-slate-600 border-slate-200 hover:border-slate-300'
               }`}
             >
               <span className={opt.color}>{opt.label}</span>
@@ -216,12 +215,12 @@ export default function CasesQueuePage() {
       </div>
 
       {/* Results Header */}
-      <div className="flex items-center justify-between text-xs text-slate-400 px-1">
-        <span>Showing <strong className="text-slate-200">{filteredCases.length}</strong> matching case{filteredCases.length !== 1 ? 's' : ''}</span>
+      <div className="flex items-center justify-between text-xs text-slate-500 px-1">
+        <span>Showing <strong className="text-slate-900">{filteredCases.length}</strong> matching case{filteredCases.length !== 1 ? 's' : ''}</span>
         {searchTerm && (
           <button
             onClick={() => { setSearchTerm(''); setPriorityFilter('ALL'); setStatusFilter('ACTIVE'); }}
-            className="text-blue-400 hover:underline"
+            className="text-blue-600 hover:underline font-semibold"
           >
             Clear all filters
           </button>

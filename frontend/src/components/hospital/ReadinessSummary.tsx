@@ -12,18 +12,18 @@ export function ReadinessSummary() {
   const previewResources = resources.slice(0, 6);
 
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-5 space-y-4">
+    <div className="rounded-xl border border-slate-200 bg-white p-5 space-y-4 shadow-sm">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600/20 border border-emerald-500/40 text-emerald-400">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-600">
             <BedDouble className="h-4 w-4" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
               Emergency Resource Readiness
             </h3>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500">
               {stats.availableBays} of {stats.totalBays} Acute Resuscitation / Trauma Bays Ready
             </p>
           </div>
@@ -31,7 +31,7 @@ export function ReadinessSummary() {
 
         <Link
           href="/hospital/readiness"
-          className="inline-flex items-center gap-1 text-xs font-semibold text-blue-400 hover:text-blue-300"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700"
         >
           <span>Manage Resources</span>
           <ChevronRight className="h-3.5 w-3.5" />
@@ -45,13 +45,13 @@ export function ReadinessSummary() {
           return (
             <div
               key={res.id}
-              className="rounded-lg border border-slate-800/80 bg-slate-950/60 p-3 flex items-center justify-between"
+              className="rounded-lg border border-slate-200 bg-slate-50 p-3 flex items-center justify-between"
             >
               <div className="space-y-0.5 truncate pr-2">
-                <span className="text-xs font-bold text-slate-200 block truncate">
+                <span className="text-xs font-bold text-slate-900 block truncate">
                   {res.name}
                 </span>
-                <span className="text-[10px] text-slate-400 block truncate">
+                <span className="text-[10px] text-slate-500 block truncate">
                   {res.location}
                 </span>
               </div>

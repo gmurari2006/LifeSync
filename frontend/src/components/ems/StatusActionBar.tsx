@@ -83,15 +83,15 @@ export function StatusActionBar({ currentCase }: StatusActionBarProps) {
   const Icon = next.icon;
 
   return (
-    <div className="rounded-2xl border border-orange-500/30 bg-slate-950/95 p-4 sm:p-5 shadow-2xl backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div className="rounded-2xl border border-slate-300 bg-white/95 p-4 sm:p-5 shadow-xl backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4">
       {/* Current Workflow Stage */}
       <div className="flex items-center gap-3 w-full sm:w-auto">
-        <div className="h-3 w-3 rounded-full bg-orange-400 animate-ping shrink-0" />
+        <div className="h-3 w-3 rounded-full bg-blue-600 animate-pulse shrink-0" />
         <div>
-          <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">
+          <span className="text-[10px] font-mono text-slate-500 uppercase tracking-wider block font-semibold">
             Current Stage
           </span>
-          <span className="text-sm font-extrabold text-white">
+          <span className="text-sm font-bold text-slate-900">
             {currentCase.transportStatus}
           </span>
         </div>
@@ -101,9 +101,9 @@ export function StatusActionBar({ currentCase }: StatusActionBarProps) {
       <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
         <Link
           href="/ems/active"
-          className="px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/80 hover:bg-slate-800 text-slate-300 font-bold text-xs flex items-center gap-1.5 transition-all"
+          className="px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition-all shadow-xs"
         >
-          <Navigation className="h-3.5 w-3.5 text-orange-400" />
+          <Navigation className="h-3.5 w-3.5 text-blue-600" />
           <span className="hidden sm:inline">In-Transit</span> Console
         </Link>
 
@@ -111,7 +111,7 @@ export function StatusActionBar({ currentCase }: StatusActionBarProps) {
         <button
           type="button"
           onClick={next.action}
-          className={`flex-1 sm:flex-initial px-6 py-3.5 rounded-2xl font-extrabold text-xs sm:text-sm text-white shadow-xl transition-all flex items-center justify-center gap-2 active:scale-95 ${next.color}`}
+          className={`flex-1 sm:flex-initial px-6 py-3.5 rounded-xl font-bold text-xs sm:text-sm text-white shadow-xs transition-all flex items-center justify-center gap-2 active:scale-95 ${next.color}`}
         >
           <Icon className="h-4 w-4" />
           <span>{next.label}</span>

@@ -28,13 +28,13 @@ export function CaseSummaryCard({ caseData: c }: CaseSummaryCardProps) {
   return (
     <div className="space-y-5">
       {/* Pre-Arrival Banner Notice */}
-      <div className="rounded-xl border border-blue-500/30 bg-blue-950/20 p-3 flex items-start gap-2.5">
-        <ShieldAlert className="h-4 w-4 text-blue-400 shrink-0 mt-0.5" />
+      <div className="rounded-2xl border border-blue-200 bg-blue-50/70 p-3.5 flex items-start gap-2.5">
+        <ShieldAlert className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
         <div className="text-xs space-y-0.5">
-          <p className="font-bold text-blue-200 uppercase tracking-wider text-[11px]">
+          <p className="font-bold text-blue-900 uppercase tracking-wider text-[11px]">
             PRE-ARRIVAL REPORTED CLINICAL SUMMARY
           </p>
-          <p className="text-slate-400 leading-relaxed text-[11px]">
+          <p className="text-slate-600 leading-relaxed text-[11px]">
             Data originates from citizen reports and verified pre-hospital observations. Final clinical evaluation occurs on patient arrival.
           </p>
         </div>
@@ -43,38 +43,38 @@ export function CaseSummaryCard({ caseData: c }: CaseSummaryCardProps) {
       {/* Main Clinical Findings Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Chief Complaint & Mechanism */}
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4 space-y-3">
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-300 uppercase tracking-wider">
-            <FileText className="h-4 w-4 text-blue-400" />
-            <span>Chief Complaint & Mechanism</span>
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 space-y-3 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-bold text-slate-700 uppercase tracking-wider">
+            <FileText className="h-4 w-4 text-blue-600" />
+            <span>Chief Complaint &amp; Mechanism</span>
           </div>
 
           <div className="space-y-2">
-            <div className="bg-slate-950/60 p-3 rounded-lg border border-slate-800/80">
-              <span className="text-[11px] font-semibold text-slate-400 block mb-1">Reported Issue:</span>
-              <p className="text-sm font-medium text-slate-100 leading-snug">
+            <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
+              <span className="text-[11px] font-semibold text-slate-500 block mb-1">Reported Issue:</span>
+              <p className="text-sm font-semibold text-slate-900 leading-snug">
                 {summary.chiefComplaint}
               </p>
             </div>
 
             {summary.mechanismOfInjury && (
-              <div className="bg-slate-950/40 p-3 rounded-lg border border-slate-800/60 text-xs text-slate-300">
-                <span className="text-[11px] font-semibold text-slate-400 block mb-1">Mechanism / Context:</span>
+              <div className="bg-slate-50/60 p-3 rounded-xl border border-slate-200 text-xs text-slate-700">
+                <span className="text-[11px] font-semibold text-slate-500 block mb-1">Mechanism / Context:</span>
                 <p>{summary.mechanismOfInjury}</p>
               </div>
             )}
 
-            <div className="flex items-center justify-between text-xs pt-1 px-1 text-slate-400">
+            <div className="flex items-center justify-between text-xs pt-1 px-1 text-slate-600">
               <span>Consciousness (AVPU):</span>
-              <span className="font-semibold text-slate-200 px-2 py-0.5 rounded bg-slate-800 border border-slate-700">
+              <span className="font-bold text-slate-800 px-2 py-0.5 rounded-lg bg-slate-100 border border-slate-200">
                 {summary.consciousness}
               </span>
             </div>
 
             {summary.symptomOnsetMinutes && (
-              <div className="flex items-center justify-between text-xs px-1 text-slate-400">
+              <div className="flex items-center justify-between text-xs px-1 text-slate-600">
                 <span>Estimated Symptom Onset:</span>
-                <span className="font-semibold text-slate-200">
+                <span className="font-semibold text-slate-800">
                   Approx. {summary.symptomOnsetMinutes} mins ago
                 </span>
               </div>
@@ -83,22 +83,22 @@ export function CaseSummaryCard({ caseData: c }: CaseSummaryCardProps) {
         </div>
 
         {/* Reported Symptoms & Pertinent Negatives */}
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4 space-y-3">
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-300 uppercase tracking-wider">
-            <Activity className="h-4 w-4 text-emerald-400" />
-            <span>Symptoms & Observations</span>
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 space-y-3 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-bold text-slate-700 uppercase tracking-wider">
+            <Activity className="h-4 w-4 text-emerald-600" />
+            <span>Symptoms &amp; Observations</span>
           </div>
 
           <div className="space-y-3">
             <div>
-              <span className="text-[11px] font-semibold text-slate-400 block mb-1.5">Detected Symptoms:</span>
+              <span className="text-[11px] font-semibold text-slate-500 block mb-1.5">Detected Symptoms:</span>
               <div className="flex flex-wrap gap-1.5">
                 {reportedSymptoms.map((symp: string, i: number) => (
                   <span
                     key={i}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium bg-red-950/30 text-red-300 border border-red-500/20"
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200"
                   >
-                    <AlertTriangle className="h-3 w-3 text-red-400 shrink-0" />
+                    <AlertTriangle className="h-3 w-3 text-rose-600 shrink-0" />
                     {symp}
                   </span>
                 ))}
@@ -107,14 +107,14 @@ export function CaseSummaryCard({ caseData: c }: CaseSummaryCardProps) {
 
             {pertinentNegatives.length > 0 && (
               <div>
-                <span className="text-[11px] font-semibold text-slate-400 block mb-1.5">Pertinent Negatives (Reported Absent):</span>
+                <span className="text-[11px] font-semibold text-slate-500 block mb-1.5">Pertinent Negatives (Reported Absent):</span>
                 <div className="flex flex-wrap gap-1.5">
                   {pertinentNegatives.map((neg: string, i: number) => (
                     <span
                       key={i}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium bg-slate-800/60 text-slate-300 border border-slate-700/50"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200"
                     >
-                      <CheckCircle2 className="h-3 w-3 text-emerald-400 shrink-0" />
+                      <CheckCircle2 className="h-3 w-3 text-emerald-600 shrink-0" />
                       {neg}
                     </span>
                   ))}
@@ -128,18 +128,18 @@ export function CaseSummaryCard({ caseData: c }: CaseSummaryCardProps) {
       {/* Medical Background: Allergies, Meds, History */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Allergies */}
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4 space-y-2">
-          <div className="flex items-center gap-2 text-xs font-semibold text-amber-300 uppercase tracking-wider">
-            <XCircle className="h-4 w-4 text-amber-400" />
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 space-y-2 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-bold text-amber-800 uppercase tracking-wider">
+            <XCircle className="h-4 w-4 text-amber-600" />
             <span>Known Allergies</span>
           </div>
-          <ul className="text-xs text-slate-300 space-y-1">
+          <ul className="text-xs text-slate-700 space-y-1">
             {knownAllergies.length === 0 ? (
-              <li className="text-slate-500 italic">None reported</li>
+              <li className="text-slate-400 italic">None reported</li>
             ) : (
               knownAllergies.map((item: string, i: number) => (
                 <li key={i} className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
                   <span>{item}</span>
                 </li>
               ))
@@ -148,18 +148,18 @@ export function CaseSummaryCard({ caseData: c }: CaseSummaryCardProps) {
         </div>
 
         {/* Current Medications */}
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4 space-y-2">
-          <div className="flex items-center gap-2 text-xs font-semibold text-blue-300 uppercase tracking-wider">
-            <Pill className="h-4 w-4 text-blue-400" />
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 space-y-2 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-bold text-blue-800 uppercase tracking-wider">
+            <Pill className="h-4 w-4 text-blue-600" />
             <span>Known Medications</span>
           </div>
-          <ul className="text-xs text-slate-300 space-y-1">
+          <ul className="text-xs text-slate-700 space-y-1">
             {knownMedications.length === 0 ? (
-              <li className="text-slate-500 italic">None reported</li>
+              <li className="text-slate-400 italic">None reported</li>
             ) : (
               knownMedications.map((item: string, i: number) => (
                 <li key={i} className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
                   <span>{item}</span>
                 </li>
               ))
@@ -168,18 +168,18 @@ export function CaseSummaryCard({ caseData: c }: CaseSummaryCardProps) {
         </div>
 
         {/* Medical History */}
-        <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4 space-y-2">
-          <div className="flex items-center gap-2 text-xs font-semibold text-purple-300 uppercase tracking-wider">
-            <History className="h-4 w-4 text-purple-400" />
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 space-y-2 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-bold text-purple-800 uppercase tracking-wider">
+            <History className="h-4 w-4 text-purple-600" />
             <span>Relevant History</span>
           </div>
-          <ul className="text-xs text-slate-300 space-y-1">
+          <ul className="text-xs text-slate-700 space-y-1">
             {relevantHistory.length === 0 ? (
-              <li className="text-slate-500 italic">None reported</li>
+              <li className="text-slate-400 italic">None reported</li>
             ) : (
               relevantHistory.map((item: string, i: number) => (
                 <li key={i} className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-purple-400 shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-purple-500 shrink-0" />
                   <span>{item}</span>
                 </li>
               ))
@@ -190,25 +190,25 @@ export function CaseSummaryCard({ caseData: c }: CaseSummaryCardProps) {
 
       {/* AI Structuring Note & Required Hospital Specialties */}
       {summary?.aiStructuringNotes && (
-        <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4 space-y-2">
+        <div className="rounded-2xl border border-purple-200 bg-purple-50/40 p-4 space-y-2 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
-              Coordination & Staging Recommendation
+            <span className="text-xs font-bold text-purple-900 uppercase tracking-wider">
+              Coordination &amp; Staging Recommendation
             </span>
-            <span className="text-[10px] text-slate-500 font-mono">
+            <span className="text-[10px] text-purple-700 font-mono">
               LifeSync Safety Engine v1.2
             </span>
           </div>
-          <p className="text-xs text-slate-300 leading-relaxed bg-slate-900/60 p-3 rounded-lg border border-slate-800/80">
+          <p className="text-xs text-slate-700 leading-relaxed bg-white p-3 rounded-xl border border-purple-100 shadow-sm">
             {summary.aiStructuringNotes}
           </p>
 
           <div className="flex flex-wrap items-center gap-2 pt-1">
-            <span className="text-xs text-slate-400 font-medium">Recommended Specialties:</span>
+            <span className="text-xs text-slate-600 font-medium">Recommended Specialties:</span>
             {specialtyRequirements.map((spec: string, i: number) => (
               <span
                 key={i}
-                className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-900/40 text-blue-200 border border-blue-700/50"
+                className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200"
               >
                 {spec}
               </span>

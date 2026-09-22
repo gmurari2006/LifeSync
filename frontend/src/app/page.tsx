@@ -1,221 +1,315 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { 
   Activity, 
   ArrowRight, 
   AlertOctagon, 
   Ambulance, 
   Building2, 
-  BedDouble, 
-  Inbox, 
-  Radio, 
-  ShieldAlert,
-  Smartphone,
-  CheckCircle2,
-  Users,
+  CheckCircle2, 
+  Clock, 
+  ShieldCheck, 
+  Sparkles, 
   Navigation,
-  FileCheck
+  Compass
 } from 'lucide-react';
 
 export default function Home() {
+  const workflowSteps = [
+    { label: 'REPORT', desc: 'Bystander scene intake' },
+    { label: 'STRUCTURE', desc: 'Assistive AI formatting' },
+    { label: 'VERIFY', desc: 'EMS clinical vitals' },
+    { label: 'MATCH', desc: 'Multi-factor suitability' },
+    { label: 'CONFIRM', desc: 'Human clinician assignment' },
+    { label: 'TRANSPORT', desc: 'Simulated transit telemetry' },
+    { label: 'ARRIVE', desc: 'Staged ED bay handover' },
+  ];
+
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-8 text-center bg-gradient-to-b from-slate-950 via-[#0a101f] to-slate-950">
-      <div className="max-w-6xl w-full border border-slate-800/80 bg-slate-900/60 backdrop-blur-md rounded-3xl p-6 sm:p-10 shadow-2xl space-y-8">
-        
-        {/* Synthetic Data Badge */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-amber-500/40 bg-amber-500/10 text-amber-300 text-xs font-semibold tracking-wider uppercase">
-          <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-          <span>DEMO / SYNTHETIC DATA &middot; THREE-PORTAL ECOSYSTEM READY</span>
-        </div>
-
-        {/* Header Branding */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600/20 border border-blue-500/40 text-blue-400">
-              <Activity className="h-7 w-7 animate-pulse" />
+    <main className="min-h-screen bg-slate-50 text-slate-900 selection:bg-blue-600 selection:text-white">
+      {/* Top Brand Bar */}
+      <header className="border-b border-slate-200 bg-white sticky top-0 z-30 shadow-xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-white shadow-xs">
+              <Activity className="h-5 w-5" />
             </div>
-            <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent">
-              LifeSync
-            </h1>
+            <div>
+              <span className="text-lg font-bold tracking-tight text-slate-900 block leading-tight">
+                LifeSync
+              </span>
+              <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">
+                Emergency Coordination Network
+              </span>
+            </div>
           </div>
-          <p className="text-base sm:text-lg font-medium text-slate-300 tracking-wide max-w-xl mx-auto">
-            AI-Assisted Pre-Hospital Emergency Coordination Platform
-          </p>
+
+          <div className="flex items-center gap-2 sm:gap-3 text-xs font-semibold">
+            <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px]">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
+              Regional Network Active
+            </span>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Hero Container */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-10">
+        
+        {/* Hero Banner Grid: Left Copy & Right Authentic Visual */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white border border-slate-200 rounded-2xl p-6 sm:p-10 shadow-xs">
+          <div className="lg:col-span-7 space-y-5">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-200 bg-blue-50 text-blue-700 text-xs font-semibold">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>Production-Grade Pre-Hospital Platform</span>
+            </div>
+
+            <div className="space-y-3">
+              <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-900 leading-tight">
+                Critical emergency information reaches the right team before the patient does.
+              </h1>
+              <p className="text-base text-slate-600 max-w-xl leading-relaxed">
+                LifeSync synchronizes citizen scene observations, verified paramedic telemetry, and hospital resuscitation readiness into one deterministic, human-controlled workflow.
+              </p>
+            </div>
+
+            {/* Core Principle Quote */}
+            <div className="border-l-3 border-blue-600 bg-slate-50 p-4 rounded-r-xl text-slate-700 text-sm font-medium italic">
+              &ldquo;Seconds matter in acute clinical triage. LifeSync bridges the pre-hospital information gap so trauma and medical teams are staged before the ambulance arrives.&rdquo;
+            </div>
+
+            {/* Quick Launch Buttons */}
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <Link
+                href="/citizen"
+                className="px-5 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-sm transition-colors inline-flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+              >
+                <span>Report an Emergency</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link
+                href="/ems"
+                className="px-4 py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 font-semibold text-sm shadow-xs transition-colors inline-flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <Ambulance className="w-4 h-4 text-slate-600" />
+                <span>EMS Console</span>
+              </Link>
+              <Link
+                href="/hospital"
+                className="px-4 py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 font-semibold text-sm shadow-xs transition-colors inline-flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <Building2 className="w-4 h-4 text-slate-600" />
+                <span>Hospital Command</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Right Hero Media Frame */}
+          <div className="lg:col-span-5">
+            <div className="relative rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-slate-100 aspect-video">
+              <Image
+                src="/images/lifesync_hero.jpg"
+                alt="LifeSync Emergency Response Coordination"
+                fill
+                priority
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 500px"
+              />
+              <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-900/80 to-transparent p-3 text-white text-[11px] font-medium flex items-center justify-between">
+                <span>Emergency Department Bay 1 &middot; Active Coordination</span>
+                <span className="font-mono text-[10px] bg-black/40 px-2 py-0.5 rounded">DEMO CONTEXT</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Core Principle */}
-        <div className="p-5 sm:p-6 rounded-2xl border border-blue-500/20 bg-blue-950/20 text-slate-200 shadow-inner max-w-2xl mx-auto">
-          <p className="text-sm sm:text-base italic font-normal text-blue-100/90 leading-relaxed">
-            &ldquo;Critical emergency information should reach the hospital before the patient does.&rdquo;
-          </p>
+        {/* The 7-Step Emergency Coordination Sequence */}
+        <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+            <div>
+              <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
+                Emergency Information Lifecycle
+              </h2>
+              <p className="text-xs text-slate-500">
+                End-to-end synchronized lifecycle with strict data provenance and human confirmation gates
+              </p>
+            </div>
+            <span className="text-xs font-mono text-blue-600 font-bold">
+              7-STAGE PIPELINE
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 pt-1">
+            {workflowSteps.map((step, idx) => (
+              <div
+                key={idx}
+                className="p-3 rounded-xl border border-slate-100 bg-slate-50/70 space-y-1 text-center"
+              >
+                <div className="text-[10px] font-mono font-bold text-blue-600 uppercase">
+                  0{idx + 1}
+                </div>
+                <div className="text-xs font-bold text-slate-800">
+                  {step.label}
+                </div>
+                <div className="text-[10px] text-slate-500 leading-tight">
+                  {step.desc}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* 3-Portal Launcher Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 text-left pt-2">
+        {/* Three Portal Launchers */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
-          {/* Portal 1: Citizen / Bystander Portal */}
-          <div className="rounded-3xl border border-red-500/40 bg-gradient-to-b from-red-950/30 via-slate-900/60 to-slate-950 p-6 flex flex-col justify-between space-y-6 shadow-xl relative overflow-hidden group hover:border-red-500/70 transition-all">
+          {/* Portal 1: Citizen / Bystander */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 flex flex-col justify-between space-y-5 shadow-xs hover:border-red-300 transition-colors">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-red-600/20 border border-red-500/40 text-red-400">
-                  <AlertOctagon className="h-6 w-6" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-50 text-red-600 border border-red-100">
+                  <AlertOctagon className="h-5 w-5" />
                 </div>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-red-950 text-red-300 border border-red-800/60 uppercase font-semibold">
-                  Module C (Step 3)
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200 font-semibold uppercase">
+                  Mobile First
                 </span>
               </div>
 
-              <div className="space-y-1.5">
-                <h2 className="text-lg font-extrabold text-white group-hover:text-red-300 transition-colors">
+              <div className="space-y-1">
+                <h3 className="text-base font-bold text-slate-900">
                   Citizen / Bystander Portal
-                </h2>
-                <p className="text-xs text-slate-300 leading-relaxed">
-                  Mobile-first emergency intake. Report scene observations, people count, condition, and location in seconds.
+                </h3>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  Simple, stress-free incident intake. Capture essential observations, people count, and location in seconds.
                 </p>
               </div>
 
-              <div className="space-y-1.5 text-xs text-slate-400 pt-1">
-                <div className="flex items-center gap-2 text-slate-300">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-red-400 shrink-0" />
-                  <span>5-Step progressive intake</span>
-                </div>
-                <div className="flex items-center gap-2 text-slate-300">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-red-400 shrink-0" />
-                  <span>Simulated GPS auto-pin</span>
-                </div>
-                <div className="flex items-center gap-2 text-slate-300">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-red-400 shrink-0" />
-                  <span>Live 4-stage tracking</span>
-                </div>
-              </div>
+              <ul className="space-y-1.5 text-xs text-slate-600 pt-1">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                  <span>5-step progressive intake</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                  <span>One-click simulated GPS auto-pin</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                  <span>Real-time response tracking</span>
+                </li>
+              </ul>
             </div>
 
             <Link
               href="/citizen"
-              className="py-3.5 px-4 rounded-2xl bg-red-600 hover:bg-red-500 text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-red-950/60 transition-all flex items-center justify-center gap-2 active:scale-98"
+              className="w-full py-2.5 px-4 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs shadow-xs transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-red-500"
             >
               <span>Launch Citizen Intake</span>
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
 
           {/* Portal 2: EMS / Paramedic Operations */}
-          <div className="rounded-3xl border border-orange-500/40 bg-gradient-to-b from-orange-950/30 via-slate-900/60 to-slate-950 p-6 flex flex-col justify-between space-y-6 shadow-xl relative overflow-hidden group hover:border-orange-500/70 transition-all">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 flex flex-col justify-between space-y-5 shadow-xs hover:border-blue-300 transition-colors">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-600/20 border border-orange-500/40 text-orange-400">
-                  <Ambulance className="h-6 w-6" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 border border-blue-100">
+                  <Ambulance className="h-5 w-5" />
                 </div>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-950 text-orange-300 border border-orange-800/60 uppercase font-semibold">
-                  Module E (Step 4)
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200 font-semibold uppercase">
+                  Field Operations
                 </span>
               </div>
 
-              <div className="space-y-1.5">
-                <h2 className="text-lg font-extrabold text-white group-hover:text-orange-300 transition-colors">
-                  EMS / Paramedic Portal
-                </h2>
-                <p className="text-xs text-slate-300 leading-relaxed">
-                  Field-response console. Verify scene observations, record verified vitals, stream transport telemetry, and handover.
+              <div className="space-y-1">
+                <h3 className="text-base font-bold text-slate-900">
+                  EMS Operations Console
+                </h3>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  Real-time paramedic field console. Verify clinical vitals, review assistive AI structuring, and execute hospital matching.
                 </p>
               </div>
 
-              <div className="space-y-1.5 text-xs text-slate-400 pt-1">
-                <div className="flex items-center gap-2 text-slate-300">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-orange-400 shrink-0" />
-                  <span>EMS observation verification</span>
-                </div>
-                <div className="flex items-center gap-2 text-slate-300">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-orange-400 shrink-0" />
-                  <span>En-route vitals synchronization</span>
-                </div>
-                <div className="flex items-center gap-2 text-slate-300">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-orange-400 shrink-0" />
-                  <span>Digital bedside handover</span>
-                </div>
-              </div>
+              <ul className="space-y-1.5 text-xs text-slate-600 pt-1">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                  <span>Clinical vitals & assessment recorder</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                  <span>Assistive AI structuring (non-diagnostic)</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                  <span>Deterministic 40/35/25 hospital matching</span>
+                </li>
+              </ul>
             </div>
 
             <Link
               href="/ems"
-              className="py-3.5 px-4 rounded-2xl bg-orange-600 hover:bg-orange-500 text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-orange-950/60 transition-all flex items-center justify-center gap-2 active:scale-98"
+              className="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <span>Launch EMS Field Console</span>
-              <ArrowRight className="h-4 w-4" />
+              <span>Launch EMS Console</span>
+              <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
 
-          {/* Portal 3: Hospital Emergency Readiness Portal */}
-          <div className="rounded-3xl border border-blue-500/40 bg-gradient-to-b from-blue-950/30 via-slate-900/60 to-slate-950 p-6 flex flex-col justify-between space-y-6 shadow-xl relative overflow-hidden group hover:border-blue-500/70 transition-all">
+          {/* Portal 3: Hospital Command */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 flex flex-col justify-between space-y-5 shadow-xs hover:border-indigo-300 transition-colors">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-600/20 border border-blue-500/40 text-blue-400">
-                  <Building2 className="h-6 w-6" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100">
+                  <Building2 className="h-5 w-5" />
                 </div>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800/60 uppercase font-semibold">
-                  Module H (Step 2)
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200 font-semibold uppercase">
+                  Emergency Command
                 </span>
               </div>
 
-              <div className="space-y-1.5">
-                <h2 className="text-lg font-extrabold text-white group-hover:text-blue-300 transition-colors">
-                  Hospital Readiness Portal
-                </h2>
-                <p className="text-xs text-slate-300 leading-relaxed">
-                  Emergency department command console. Monitor incoming pre-arrivals, clinical summaries, and stage trauma/cardiac bay readiness.
+              <div className="space-y-1">
+                <h3 className="text-base font-bold text-slate-900">
+                  Hospital Emergency Readiness
+                </h3>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  ED pre-arrival staging command. Live transit countdowns, resuscitation bay allocation, and human clinical audit.
                 </p>
               </div>
 
-              <div className="space-y-1.5 text-xs text-slate-400 pt-1">
-                <div className="flex items-center gap-2 text-slate-300">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-blue-400 shrink-0" />
-                  <span>Incoming pre-arrival queue</span>
-                </div>
-                <div className="flex items-center gap-2 text-slate-300">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-blue-400 shrink-0" />
-                  <span>Pre-arrival clinical packet</span>
-                </div>
-                <div className="flex items-center gap-2 text-slate-300">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-blue-400 shrink-0" />
-                  <span>1-Click bay & team staging</span>
-                </div>
-              </div>
+              <ul className="space-y-1.5 text-xs text-slate-600 pt-1">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                  <span>Pre-arrival patient packet & countdown</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                  <span>Resuscitation bay & trauma team staging</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                  <span>Immutable clinical decision audit timeline</span>
+                </li>
+              </ul>
             </div>
 
             <Link
               href="/hospital"
-              className="py-3.5 px-4 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-blue-950/60 transition-all flex items-center justify-center gap-2 active:scale-98"
+              className="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-xs transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-slate-700"
             >
-              <span>Launch Hospital ED Console</span>
-              <ArrowRight className="h-4 w-4" />
+              <span>Launch Hospital Command</span>
+              <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
-
         </div>
 
-        {/* Global Coordination Highlights */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-slate-800/60 text-xs text-left">
-          <div className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/80 space-y-1">
-            <span className="font-semibold text-red-400 flex items-center gap-1.5">
-              <Smartphone className="h-3.5 w-3.5" /> 1. Citizen Intake
-            </span>
-            <p className="text-slate-400 text-[11px]">Bystander reports scene observations without clinical jargon.</p>
-          </div>
-
-          <div className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/80 space-y-1">
-            <span className="font-semibold text-orange-400 flex items-center gap-1.5">
-              <Ambulance className="h-3.5 w-3.5" /> 2. EMS Verification
-            </span>
-            <p className="text-slate-400 text-[11px]">Paramedics verify findings & stream real-time vitals telemetry.</p>
-          </div>
-
-          <div className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/80 space-y-1">
-            <span className="font-semibold text-blue-400 flex items-center gap-1.5">
-              <Building2 className="h-3.5 w-3.5" /> 3. Hospital Readiness
-            </span>
-            <p className="text-slate-400 text-[11px]">ED teams stage resuscitation bays before ambulance arrival.</p>
-          </div>
+        {/* Demo Synthetic Disclaimer */}
+        <div className="rounded-xl border border-slate-200 bg-white p-4 text-center text-xs text-slate-500 space-y-0.5">
+          <p className="font-semibold text-slate-700">
+            LifeSync Pre-Hospital Emergency Information Coordination Platform
+          </p>
+          <p>
+            Operating with synthetic benchmark scenarios and simulated transit telemetry for clinical demonstration.
+          </p>
         </div>
-
       </div>
     </main>
   );

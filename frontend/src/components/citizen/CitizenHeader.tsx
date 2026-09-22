@@ -12,46 +12,45 @@ interface CitizenHeaderProps {
 
 export function CitizenHeader({ showBack = false, backHref, onBack }: CitizenHeaderProps) {
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-800 bg-slate-950/95 px-4 sm:px-6 backdrop-blur-md">
+    <header className="sticky top-0 z-30 flex h-14 w-full items-center justify-between border-b border-slate-200 bg-white px-4 sm:px-6 shadow-xs">
       <div className="flex items-center gap-3">
         {showBack && (
           backHref ? (
             <Link
               href={backHref}
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 text-slate-300 hover:text-white hover:border-slate-700 transition-colors"
+              className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors"
             >
-              <ChevronLeft className="h-5 w-5" />
+              <ChevronLeft className="h-4 w-4" />
             </Link>
           ) : (
             <button
               onClick={onBack}
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 text-slate-300 hover:text-white hover:border-slate-700 transition-colors"
+              className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors"
             >
-              <ChevronLeft className="h-5 w-5" />
+              <ChevronLeft className="h-4 w-4" />
             </button>
           )
         )}
 
         <Link href="/citizen" className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-red-600/20 border border-red-500/40 text-red-400">
-            <Activity className="h-5 w-5 animate-pulse" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-600 text-white shadow-xs">
+            <Activity className="h-4 w-4" />
           </div>
           <div>
-            <span className="text-base font-extrabold tracking-tight text-white block leading-none">
+            <span className="text-base font-bold tracking-tight text-slate-900 block leading-none">
               LifeSync
             </span>
-            <span className="text-[11px] font-semibold text-red-400">
-              Emergency Intake
+            <span className="text-[10px] font-semibold text-red-600">
+              Citizen Emergency
             </span>
           </div>
         </Link>
       </div>
 
-      {/* Demo Badge */}
-      <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-amber-500/40 bg-amber-500/10 text-amber-300 text-[10px] sm:text-xs font-semibold uppercase tracking-wider">
-        <ShieldAlert className="w-3 h-3 text-amber-400 shrink-0" />
-        <span className="hidden sm:inline">DEMO • SYNTHETIC DATA</span>
-        <span className="sm:hidden">DEMO DATA</span>
+      {/* Reassuring Dispatch Notice */}
+      <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-amber-200 bg-amber-50 text-amber-800 text-[10px] font-semibold">
+        <ShieldAlert className="w-3 h-3 text-amber-600 shrink-0" />
+        <span>DIRECT DISPATCH SYNC</span>
       </div>
     </header>
   );

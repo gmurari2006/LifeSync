@@ -31,7 +31,7 @@ export function Sidebar() {
       href: '/hospital/cases',
       icon: Inbox,
       badge: stats.awaitingAck > 0 ? `${stats.awaitingAck} Pending` : `${stats.totalIncoming}`,
-      badgeColor: stats.awaitingAck > 0 ? 'bg-red-500/20 text-red-300 border-red-500/40' : 'bg-slate-800 text-slate-400',
+      badgeColor: stats.awaitingAck > 0 ? 'bg-rose-50 text-rose-700 border-rose-200' : 'bg-slate-100 text-slate-600 border-slate-200',
       exact: false,
     },
     {
@@ -39,7 +39,7 @@ export function Sidebar() {
       href: '/hospital/active',
       icon: Radio,
       badge: `${stats.acknowledged} Active`,
-      badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/40',
+      badgeColor: 'bg-blue-50 text-blue-700 border-blue-200',
       exact: true,
     },
     {
@@ -47,7 +47,7 @@ export function Sidebar() {
       href: '/hospital/readiness',
       icon: BedDouble,
       badge: `${stats.availableBays}/${stats.totalBays} Bays`,
-      badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+      badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
       exact: true,
     },
     {
@@ -60,7 +60,7 @@ export function Sidebar() {
   ];
 
   return (
-    <aside className="w-64 shrink-0 border-r border-slate-800/80 bg-slate-950/60 hidden md:flex flex-col justify-between p-4">
+    <aside className="w-64 shrink-0 border-r border-slate-200 bg-white hidden md:flex flex-col justify-between p-4">
       {/* Navigation Group */}
       <div className="space-y-6">
         <div>
@@ -78,14 +78,14 @@ export function Sidebar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`group flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${
+                  className={`group flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
                     isActive
-                      ? 'bg-blue-600/15 text-blue-400 border border-blue-500/30 shadow-sm'
-                      : 'text-slate-400 hover:bg-slate-900/80 hover:text-slate-200'
+                      ? 'bg-blue-50 text-blue-700 font-semibold border border-blue-100 shadow-sm'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <Icon className={`h-4 w-4 transition-colors ${isActive ? 'text-blue-400' : 'text-slate-400 group-hover:text-slate-300'}`} />
+                    <Icon className={`h-4 w-4 transition-colors ${isActive ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600'}`} />
                     <span>{item.label}</span>
                   </div>
 
@@ -101,35 +101,35 @@ export function Sidebar() {
         </div>
 
         {/* Quick Triage Acuity Guide Box */}
-        <div className="rounded-xl border border-slate-800/80 bg-slate-900/40 p-3.5 space-y-2">
+        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3.5 space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Operational Priority</span>
-            <ShieldCheck className="h-3.5 w-3.5 text-blue-400" />
+            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">Operational Priority</span>
+            <ShieldCheck className="h-3.5 w-3.5 text-blue-600" />
           </div>
-          <div className="text-[11px] space-y-1.5 text-slate-400">
+          <div className="text-[11px] space-y-1.5 text-slate-600">
             <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" /> Critical</span>
-              <span className="font-mono font-bold text-red-400">{String(stats.criticalCount ?? 0).padStart(2, '0')}</span>
+              <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" /> Critical</span>
+              <span className="font-mono font-bold text-rose-700">{String(stats.criticalCount ?? 0).padStart(2, '0')}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-400" /> High</span>
-              <span className="font-mono font-bold text-amber-400">{String(stats.highCount ?? 0).padStart(2, '0')}</span>
+              <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-500" /> High</span>
+              <span className="font-mono font-bold text-amber-700">{String(stats.highCount ?? 0).padStart(2, '0')}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-sky-400" /> Moderate</span>
-              <span className="font-mono font-bold text-sky-400">{String(stats.moderateCount ?? 0).padStart(2, '0')}</span>
+              <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-500" /> Moderate</span>
+              <span className="font-mono font-bold text-blue-700">{String(stats.moderateCount ?? 0).padStart(2, '0')}</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Safety & Protocol Footer Note */}
-      <div className="pt-4 border-t border-slate-800/80 text-[11px] text-slate-400 space-y-1">
-        <p className="font-medium text-slate-400">Pre-Hospital Readiness</p>
-        <p className="leading-tight">All reported data is pre-arrival. Human clinical team validates on patient handover.</p>
+      <div className="pt-4 border-t border-slate-200 text-[11px] text-slate-500 space-y-1">
+        <p className="font-semibold text-slate-700">Pre-Hospital Readiness</p>
+        <p className="leading-tight text-slate-500">All reported data is pre-arrival. Human clinical team validates on patient handover.</p>
         <Link 
           href="/" 
-          className="mt-2 inline-flex items-center gap-1 text-[11px] text-blue-400 hover:text-blue-300 font-medium pt-1"
+          className="mt-2 inline-flex items-center gap-1 text-[11px] text-blue-600 hover:text-blue-700 font-semibold pt-1"
         >
           <span>LifeSync Home</span>
           <ChevronRight className="h-3 w-3" />

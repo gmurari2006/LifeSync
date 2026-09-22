@@ -19,7 +19,7 @@ export function HospitalShell({ children }: { children: ReactNode }) {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#090d16] text-slate-100 antialiased selection:bg-blue-600 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 antialiased selection:bg-blue-600 selection:text-white">
       {/* Top Header */}
       <Header />
 
@@ -36,7 +36,7 @@ export function HospitalShell({ children }: { children: ReactNode }) {
       </div>
 
       {/* Mobile Bottom Navigation Bar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 border-t border-slate-800 bg-slate-950/95 backdrop-blur-md flex items-center justify-around py-2 px-1">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 border-t border-slate-200 bg-white/95 backdrop-blur-md flex items-center justify-around py-2 px-1">
         {mobileNav.map((item) => {
           const Icon = item.icon;
           const isActive = item.href === '/hospital' 
@@ -48,7 +48,7 @@ export function HospitalShell({ children }: { children: ReactNode }) {
               key={item.href}
               href={item.href}
               className={`flex flex-col items-center gap-1 px-2 py-1 text-[11px] font-medium transition-colors ${
-                isActive ? 'text-blue-400 font-semibold' : 'text-slate-400 hover:text-slate-200'
+                isActive ? 'text-blue-600 font-bold' : 'text-slate-500 hover:text-slate-800'
               }`}
             >
               <Icon className="h-4 w-4" />

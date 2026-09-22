@@ -42,70 +42,70 @@ export default function ReadinessPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-            <BedDouble className="h-5 w-5 text-emerald-400" />
+          <h1 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+            <BedDouble className="h-5 w-5 text-emerald-600" />
             <span>Hospital Operational Readiness</span>
           </h1>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-500">
             Real-time capacity and resource staging at {hospitalProfile.name}
           </p>
         </div>
 
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs">
-          <ShieldCheck className="h-4 w-4 text-blue-400" />
-          <span className="text-slate-300">Surge Status: <strong className="text-emerald-400">NORMAL</strong></span>
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs shadow-sm">
+          <ShieldCheck className="h-4 w-4 text-blue-600" />
+          <span className="text-slate-600">Surge Status: <strong className="text-emerald-700">NORMAL</strong></span>
         </div>
       </div>
 
       {/* Resource KPI Overview */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-        <div className="rounded-xl border border-emerald-500/30 bg-emerald-950/20 p-4 space-y-1">
-          <div className="flex items-center justify-between text-emerald-300">
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50/60 p-4 space-y-1 shadow-sm">
+          <div className="flex items-center justify-between text-emerald-800">
             <span className="text-xs font-semibold uppercase">Ready / Available</span>
-            <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
           </div>
-          <div className="text-2xl font-mono font-extrabold text-emerald-400">
+          <div className="text-2xl font-mono font-extrabold text-emerald-700">
             {readyCount}
           </div>
-          <span className="text-[11px] text-emerald-300/80">Immediate intake capable</span>
+          <span className="text-[11px] text-emerald-700/80">Immediate intake capable</span>
         </div>
 
-        <div className="rounded-xl border border-blue-500/30 bg-blue-950/20 p-4 space-y-1">
-          <div className="flex items-center justify-between text-blue-300">
+        <div className="rounded-xl border border-blue-200 bg-blue-50/60 p-4 space-y-1 shadow-sm">
+          <div className="flex items-center justify-between text-blue-800">
             <span className="text-xs font-semibold uppercase">Assigned / Occupied</span>
-            <Activity className="h-4 w-4 text-blue-400" />
+            <Activity className="h-4 w-4 text-blue-600" />
           </div>
-          <div className="text-2xl font-mono font-extrabold text-blue-400">
+          <div className="text-2xl font-mono font-extrabold text-blue-700">
             {occupiedCount}
           </div>
-          <span className="text-[11px] text-blue-300/80">Active case staging</span>
+          <span className="text-[11px] text-blue-700/80">Active case staging</span>
         </div>
 
-        <div className="rounded-xl border border-amber-500/30 bg-amber-950/20 p-4 space-y-1">
-          <div className="flex items-center justify-between text-amber-300">
+        <div className="rounded-xl border border-amber-200 bg-amber-50/60 p-4 space-y-1 shadow-sm">
+          <div className="flex items-center justify-between text-amber-800">
             <span className="text-xs font-semibold uppercase">Limited / Standby</span>
-            <AlertTriangle className="h-4 w-4 text-amber-400" />
+            <AlertTriangle className="h-4 w-4 text-amber-600" />
           </div>
-          <div className="text-2xl font-mono font-extrabold text-amber-400">
+          <div className="text-2xl font-mono font-extrabold text-amber-700">
             {limitedCount}
           </div>
-          <span className="text-[11px] text-amber-300/80">Transitioning staff</span>
+          <span className="text-[11px] text-amber-700/80">Transitioning staff</span>
         </div>
 
-        <div className="rounded-xl border border-rose-500/30 bg-rose-950/20 p-4 space-y-1">
-          <div className="flex items-center justify-between text-rose-300">
+        <div className="rounded-xl border border-rose-200 bg-rose-50/60 p-4 space-y-1 shadow-sm">
+          <div className="flex items-center justify-between text-rose-800">
             <span className="text-xs font-semibold uppercase">Offline / Maintenance</span>
-            <XCircle className="h-4 w-4 text-rose-400" />
+            <XCircle className="h-4 w-4 text-rose-600" />
           </div>
-          <div className="text-2xl font-mono font-extrabold text-rose-400">
+          <div className="text-2xl font-mono font-extrabold text-rose-700">
             {offlineCount}
           </div>
-          <span className="text-[11px] text-rose-300/80">Zero capacity</span>
+          <span className="text-[11px] text-rose-700/80">Zero capacity</span>
         </div>
       </div>
 
       {/* Category Filter Tabs */}
-      <div className="flex flex-wrap items-center gap-1.5 p-2 rounded-2xl bg-slate-900/60 border border-slate-800">
+      <div className="flex flex-wrap items-center gap-1.5 p-2 rounded-2xl bg-white border border-slate-200 shadow-sm">
         <Filter className="h-4 w-4 text-slate-400 ml-2 mr-1 shrink-0" />
         {categories.map((cat) => (
           <button
@@ -114,7 +114,7 @@ export default function ReadinessPage() {
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
               selectedCategory === cat.id
                 ? 'bg-blue-600 text-white shadow-sm'
-                : 'text-slate-400 hover:bg-slate-800/80 hover:text-slate-200'
+                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
             }`}
           >
             {cat.label}

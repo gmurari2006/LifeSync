@@ -94,28 +94,28 @@ export const HumanOverrideModal: React.FC<HumanOverrideModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 overflow-y-auto">
-      <div className="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4 overflow-y-auto">
+      <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 text-slate-900">
         {/* Header */}
-        <div className="bg-amber-950/40 border-b border-amber-500/20 px-6 py-4 flex items-center justify-between">
+        <div className="bg-amber-50/80 border-b border-amber-200 px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+            <div className="w-9 h-9 rounded-xl bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-700">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
             </div>
             <div>
-              <h3 className="text-lg font-bold text-white tracking-tight">
+              <h3 className="text-lg font-bold text-slate-900 tracking-tight">
                 Human Operational Override
               </h3>
-              <p className="text-xs text-amber-300/80">
+              <p className="text-xs text-amber-800 font-medium">
                 Case {caseId} • Role Authorized: {userRole} ({userName})
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition"
+            className="text-slate-400 hover:text-slate-700 p-1 rounded-lg hover:bg-amber-100/50 transition"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -126,15 +126,15 @@ export const HumanOverrideModal: React.FC<HumanOverrideModalProps> = ({
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
           {error && (
-            <div className="p-3.5 bg-rose-950/40 border border-rose-500/30 rounded-xl text-rose-300 text-sm flex items-start gap-2">
+            <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-sm flex items-start gap-2">
               <span className="text-base">⚠️</span>
               <span>{error}</span>
             </div>
           )}
 
           {/* Audit Notice */}
-          <div className="p-3 bg-slate-800/80 border border-slate-700 rounded-xl text-xs text-slate-300 flex items-start gap-2">
-            <span className="text-amber-400 font-bold">PROVENANCE & AUDIT:</span>
+          <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-600 flex items-start gap-2">
+            <span className="text-amber-800 font-bold">PROVENANCE & AUDIT:</span>
             <span>
               All field overrides are logged to an immutable timeline with server-verified credentials. System recommendations will be updated immediately.
             </span>
@@ -142,7 +142,7 @@ export const HumanOverrideModal: React.FC<HumanOverrideModalProps> = ({
 
           {/* Parameter Selection */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
               Parameter to Override
             </label>
             <div className="grid grid-cols-3 gap-2">
@@ -155,8 +155,8 @@ export const HumanOverrideModal: React.FC<HumanOverrideModalProps> = ({
                 }}
                 className={`px-3 py-2 text-xs font-semibold rounded-xl border transition ${
                   parameter === 'OPERATIONAL_PRIORITY'
-                    ? 'bg-amber-500/20 border-amber-500 text-amber-300'
-                    : 'bg-slate-800/60 border-slate-700 text-slate-400 hover:border-slate-600'
+                    ? 'bg-amber-50 border-amber-400 text-amber-900 font-bold shadow-sm'
+                    : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
                 }`}
               >
                 Priority / Acuity
@@ -170,8 +170,8 @@ export const HumanOverrideModal: React.FC<HumanOverrideModalProps> = ({
                 }}
                 className={`px-3 py-2 text-xs font-semibold rounded-xl border transition ${
                   parameter === 'DESTINATION_HOSPITAL'
-                    ? 'bg-amber-500/20 border-amber-500 text-amber-300'
-                    : 'bg-slate-800/60 border-slate-700 text-slate-400 hover:border-slate-600'
+                    ? 'bg-amber-50 border-amber-400 text-amber-900 font-bold shadow-sm'
+                    : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
                 }`}
               >
                 Destination Hospital
@@ -185,8 +185,8 @@ export const HumanOverrideModal: React.FC<HumanOverrideModalProps> = ({
                 }}
                 className={`px-3 py-2 text-xs font-semibold rounded-xl border transition ${
                   parameter === 'AMBULANCE_CLASS'
-                    ? 'bg-amber-500/20 border-amber-500 text-amber-300'
-                    : 'bg-slate-800/60 border-slate-700 text-slate-400 hover:border-slate-600'
+                    ? 'bg-amber-50 border-amber-400 text-amber-900 font-bold shadow-sm'
+                    : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
                 }`}
               >
                 Ambulance Class
@@ -196,7 +196,7 @@ export const HumanOverrideModal: React.FC<HumanOverrideModalProps> = ({
 
           {/* New Value Input */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
               New Override Value
             </label>
             {parameter === 'OPERATIONAL_PRIORITY' && (
@@ -208,8 +208,8 @@ export const HumanOverrideModal: React.FC<HumanOverrideModalProps> = ({
                     onClick={() => setNewValue(lvl)}
                     className={`py-2 px-3 text-xs font-bold rounded-xl border transition ${
                       newValue === lvl
-                        ? 'bg-rose-600 text-white border-rose-500 shadow-md shadow-rose-900/40'
-                        : 'bg-slate-800 border-slate-700 text-slate-300 hover:border-slate-600'
+                        ? 'bg-rose-600 text-white border-rose-600 shadow-sm'
+                        : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
                     }`}
                   >
                     {lvl}
@@ -224,7 +224,7 @@ export const HumanOverrideModal: React.FC<HumanOverrideModalProps> = ({
                   <select
                     value={newValue}
                     onChange={(e) => setNewValue(e.target.value)}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-amber-500 focus:bg-white"
                   >
                     <option value="">Select Target Destination Facility...</option>
                     {hospitals.map((h) => (
@@ -239,7 +239,7 @@ export const HumanOverrideModal: React.FC<HumanOverrideModalProps> = ({
                     placeholder="Enter Hospital ID or Name (e.g. HOSP-CITYCARE-01)"
                     value={newValue}
                     onChange={(e) => setNewValue(e.target.value)}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-amber-500 focus:bg-white"
                   />
                 )}
               </div>
@@ -254,8 +254,8 @@ export const HumanOverrideModal: React.FC<HumanOverrideModalProps> = ({
                     onClick={() => setNewValue(cls)}
                     className={`py-2 px-3 text-xs font-bold rounded-xl border transition ${
                       newValue === cls
-                        ? 'bg-indigo-600 text-white border-indigo-500 shadow-md'
-                        : 'bg-slate-800 border-slate-700 text-slate-300 hover:border-slate-600'
+                        ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
+                        : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
                     }`}
                   >
                     {cls}
@@ -267,13 +267,13 @@ export const HumanOverrideModal: React.FC<HumanOverrideModalProps> = ({
 
           {/* Reason Code Dropdown */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
-              Standardized Reason Code <span className="text-rose-400">*</span>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
+              Standardized Reason Code <span className="text-rose-500">*</span>
             </label>
             <select
               value={reasonCode}
               onChange={(e) => setReasonCode(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-amber-500 focus:bg-white"
             >
               <option value="">Select Reason Code...</option>
               {reasonOptions.map((opt) => (
@@ -286,31 +286,31 @@ export const HumanOverrideModal: React.FC<HumanOverrideModalProps> = ({
 
           {/* Free Text Clinical Justification */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
-              Clinical & Operational Justification <span className="text-rose-400">*</span>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
+              Clinical & Operational Justification <span className="text-rose-500">*</span>
             </label>
             <textarea
               rows={3}
               placeholder="Detail the clinical assessment findings, resource constraints, or emergency operational rationale requiring this override..."
               value={justification}
               onChange={(e) => setJustification(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:bg-white"
             />
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-3 pt-2 border-t border-slate-800">
+          <div className="flex items-center justify-end gap-3 pt-2 border-t border-slate-100">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition"
+              className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-xl hover:bg-slate-100 transition"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-xl shadow-lg shadow-amber-500/20 transition disabled:opacity-50 flex items-center gap-2"
+              className="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-xl shadow-sm transition disabled:opacity-50 flex items-center gap-2"
             >
               {submitting ? (
                 <>

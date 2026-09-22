@@ -9,7 +9,7 @@ import { PeopleCounter } from '@/components/citizen/PeopleCounter';
 import { ConditionSelector } from '@/components/citizen/ConditionSelector';
 import { LocationSelector } from '@/components/citizen/LocationSelector';
 import { IncidentCategory, VisibleConcern, YesNoNotSure } from '@/types/citizen';
-import { ArrowLeft, ArrowRight, CheckCircle, ShieldAlert } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 function CitizenReportWizard() {
   const router = useRouter();
@@ -124,11 +124,11 @@ function CitizenReportWizard() {
       </div>
 
       {/* Navigation Buttons */}
-      <div className="flex items-center justify-between gap-3 pt-4 border-t border-slate-800">
+      <div className="flex items-center justify-between gap-3 pt-4 border-t border-slate-200">
         <button
           type="button"
           onClick={handleBack}
-          className="px-5 py-3.5 rounded-2xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800 text-slate-300 font-bold text-xs sm:text-sm transition-all flex items-center gap-2"
+          className="px-5 py-3 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs sm:text-sm shadow-xs transition-colors flex items-center gap-2"
         >
           <ArrowLeft className="h-4 w-4" />
           <span>{currentStep === 1 ? 'Cancel' : 'Back'}</span>
@@ -138,19 +138,19 @@ function CitizenReportWizard() {
           type="button"
           onClick={handleNext}
           disabled={currentStep === 1 && !isStep1Valid}
-          className={`px-6 py-3.5 rounded-2xl font-extrabold text-xs sm:text-sm transition-all flex items-center gap-2 shadow-lg ${
+          className={`px-6 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 shadow-xs ${
             currentStep === 1 && !isStep1Valid
-              ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700/40'
+              ? 'bg-slate-200 text-slate-400 cursor-not-allowed border border-slate-200'
               : currentStep === 4
-              ? 'bg-red-600 hover:bg-red-500 text-white shadow-red-950/60'
-              : 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-950/60'
+              ? 'bg-red-600 hover:bg-red-700 text-white shadow-sm'
+              : 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm'
           }`}
         >
           <span>
             {currentStep === 1 && 'Next: People'}
             {currentStep === 2 && 'Next: Condition'}
             {currentStep === 3 && 'Next: Location'}
-            {currentStep === 4 && 'Review Report'}
+            {currentStep === 4 && 'Review & Submit'}
           </span>
           <ArrowRight className="h-4 w-4" />
         </button>
@@ -162,7 +162,7 @@ function CitizenReportWizard() {
 export default function CitizenReportPage() {
   return (
     <Suspense fallback={
-      <div className="p-8 text-center text-slate-400 text-sm">
+      <div className="p-8 text-center text-slate-500 text-sm">
         Loading emergency intake wizard...
       </div>
     }>
