@@ -30,7 +30,10 @@ import {
   AlertTriangle,
   UserCheck,
   CheckSquare,
-  Sliders
+  Sliders,
+  MapPin,
+  Radio,
+  Building2
 } from 'lucide-react';
 
 export default function CaseDetailPage() {
@@ -56,7 +59,6 @@ export default function CaseDetailPage() {
   const [selectedBay, setSelectedBay] = useState('');
   const [bayError, setBayError] = useState<string | null>(null);
   const [liveTelemetry, setLiveTelemetry] = useState<AmbulanceTelemetryState | null>(null);
-
 
   // Authoritative REST refresh callback for WebSocket reconnect
   const handleReloadAuthoritativeState = useCallback(() => {
@@ -85,7 +87,7 @@ export default function CaseDetailPage() {
         </p>
         <Link
           href="/hospital/cases"
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-semibold hover:bg-blue-500"
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-semibold hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
         >
           <ArrowLeft className="h-4 w-4" />
           <span>Back to Emergency Queue</span>
@@ -133,7 +135,6 @@ export default function CaseDetailPage() {
   };
 
   const displayEta = liveTelemetry?.eta_minutes != null
-
     ? `${liveTelemetry.eta_minutes.toFixed(1)}m`
     : formatEta(caseData.emsUnit.etaMinutes);
 
@@ -143,7 +144,7 @@ export default function CaseDetailPage() {
 
   return (
     <div className="space-y-6">
-      {/* Top Back Navigation & Case Banner */}
+      {/* Top Back Navigation & Real-Time Sync Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <Link
@@ -162,59 +163,80 @@ export default function CaseDetailPage() {
         {/* Live Sync Status */}
         <div className="flex items-center gap-2 text-xs text-slate-400">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span>Live Pre-Hospital Coordination Session</span>
+          <span className="font-mono text-[11px]">LIVE COORDINATION CONSOLE</span>
         </div>
       </div>
 
-      {/* Main Case Operations Header */}
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6 space-y-4">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div className="space-y-2">
+      {/* 1. EMERGENCY COMMAND HEADER */}
+      <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5 sm:p-6 space-y-4 shadow-xl">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+          {/* Left Block: Case ID, Priority, Status, Demographics & Location */}
+          <div className="space-y-2.5">
             <div className="flex flex-wrap items-center gap-2.5">
-              <h1 className="text-2xl font-mono font-extrabold text-white tracking-tight">
+              <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">
+                CASE ID
+              </span>
+              <h1 className="text-2xl sm:text-3xl font-mono font-extrabold text-white tracking-tight">
                 {caseData.id}
               </h1>
               <PriorityBadge priority={caseData.operationalPriority} size="md" />
               <StatusBadge status={caseData.status} size="md" />
               {caseData.assignedBay && (
-                <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-950 text-emerald-300 border border-emerald-700/60">
+                <span className="px-2.5 py-0.5 rounded-md text-xs font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-700/60">
                   {caseData.assignedBay}
                 </span>
               )}
             </div>
 
-            <div className="flex flex-wrap items-center gap-2 text-sm text-slate-200 font-medium">
-              <span className="px-2 py-0.5 rounded bg-blue-950 text-blue-300 font-mono text-xs border border-blue-800">
-                {caseData.patientAge} {caseData.patientSex}
+            {/* Patient & Incident */}
+            <div className="flex flex-wrap items-center gap-2.5 text-sm text-slate-200">
+              <span className="px-2.5 py-0.5 rounded bg-blue-950 text-blue-300 font-mono text-xs font-bold border border-blue-800">
+                {caseData.patientAge} &bull; {caseData.patientSex}
               </span>
-              <span>—</span>
-              <span className="text-base font-bold text-white">{caseData.incidentType}</span>
+              <span className="text-slate-500 font-bold">&mdash;</span>
+              <span className="text-base sm:text-lg font-bold text-white tracking-tight">
+                {caseData.incidentType}
+              </span>
             </div>
 
-            <p className="text-xs text-slate-400">
-              Reported Location: <strong className="text-slate-300">{caseData.reportedLocation}</strong> • Alerted at {caseData.timeAlerted}
-            </p>
+            {/* Operational Context Metadata Strip */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-2 pt-1 text-xs text-slate-400 font-mono">
+              <div className="bg-slate-950/60 px-3 py-1.5 rounded-xl border border-slate-800/80 truncate">
+                <span className="text-slate-500 block text-[10px] uppercase font-bold">Reported Location</span>
+                <strong className="text-slate-200 font-sans truncate block">{caseData.reportedLocation}</strong>
+              </div>
+              <div className="bg-slate-950/60 px-3 py-1.5 rounded-xl border border-slate-800/80">
+                <span className="text-slate-500 block text-[10px] uppercase font-bold">Alerted At</span>
+                <strong className="text-slate-200">{caseData.timeAlerted}</strong>
+              </div>
+              <div className="bg-slate-950/60 px-3 py-1.5 rounded-xl border border-slate-800/80 truncate">
+                <span className="text-slate-500 block text-[10px] uppercase font-bold">Assigned EMS</span>
+                <strong className="text-slate-200">{caseData.emsUnit.unitId} ({caseData.emsUnit.vehicleType})</strong>
+              </div>
+              <div className="bg-slate-950/60 px-3 py-1.5 rounded-xl border border-slate-800/80 truncate">
+                <span className="text-slate-500 block text-[10px] uppercase font-bold">Current Destination</span>
+                <strong className="text-emerald-400 truncate block">{hospitalProfile.name}</strong>
+              </div>
+            </div>
           </div>
 
-          {/* Prominent ETA & Transport Card */}
-          <div className="flex items-center gap-4 bg-slate-950/80 p-4 rounded-xl border border-slate-800 shrink-0">
-            <div className="text-right space-y-0.5">
-              <span className="text-[10px] text-slate-400 uppercase font-semibold block">
-                Estimated Transit Arrival
-              </span>
-              <div className="text-2xl font-mono font-extrabold text-red-400 flex items-center justify-end gap-1.5">
-                <Clock className="h-5 w-5 text-red-400 animate-pulse" />
-                <span>{displayEta}</span>
-              </div>
-              <span className="text-[11px] text-slate-400">
-                {displayDistance} km remaining via {caseData.emsUnit.unitId}
-              </span>
+          {/* Right Block: Prominent Command ETA Card */}
+          <div className="bg-slate-950/90 p-4 sm:p-5 rounded-2xl border border-slate-800 shrink-0 text-right space-y-1 shadow-inner min-w-[170px]">
+            <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">
+              Estimated Transit Arrival
+            </span>
+            <div className="text-3xl font-mono font-black text-red-400 flex items-center justify-end gap-2">
+              <Clock className="h-6 w-6 text-red-400 animate-pulse" />
+              <span>{displayEta}</span>
             </div>
+            <span className="text-xs text-slate-400 font-mono block">
+              {displayDistance} km &middot; via {caseData.emsUnit.unitId}
+            </span>
           </div>
         </div>
 
-        {/* Dynamic Action Area */}
-        <div className="pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
+        {/* 2. OPERATIONAL ACTION BAR */}
+        <div className="pt-3.5 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
           {bayError && (
             <div className="w-full p-2.5 bg-rose-950/40 border border-rose-500/30 rounded-xl text-rose-300 text-xs flex items-center gap-2">
               <span>⚠️</span>
@@ -224,17 +246,19 @@ export default function CaseDetailPage() {
 
           {isAlerted && (
             <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+              {/* Dominant Primary Action */}
               <button
                 onClick={() => setIsAckModalOpen(true)}
-                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-lg shadow-blue-900/40 transition-all"
+                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-lg shadow-blue-900/40 transition-all focus:outline-none focus:ring-2 focus:ring-blue-400"
               >
                 <CheckCircle2 className="h-4 w-4" />
-                <span>Acknowledge Case & Stage ED</span>
+                <span>Acknowledge Case &amp; Stage ED</span>
               </button>
 
+              {/* Clearly Separated Destructive Action */}
               <button
                 onClick={() => setIsDivertModalOpen(true)}
-                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-950/40 hover:bg-red-900/60 text-red-300 border border-red-500/30 text-xs font-semibold transition-all"
+                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-950/30 hover:bg-red-900/50 text-red-300 border border-red-500/30 text-xs font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-red-400"
               >
                 <AlertOctagon className="h-4 w-4 text-red-400" />
                 <span>Reject / Divert</span>
@@ -243,11 +267,11 @@ export default function CaseDetailPage() {
           )}
 
           {isAcknowledged && (
-            <div className="flex flex-wrap items-center justify-between gap-3 w-full bg-blue-950/20 p-3 rounded-xl border border-blue-500/30">
+            <div className="flex flex-wrap items-center justify-between gap-3 w-full bg-blue-950/20 p-3.5 rounded-xl border border-blue-500/30">
               <div className="flex items-center gap-2.5 text-xs text-blue-200">
                 <ShieldCheck className="h-5 w-5 text-blue-400 shrink-0" />
                 <div>
-                  <span className="font-bold">Case Acknowledged</span>
+                  <span className="font-bold">Case Acknowledged &amp; ED Staged</span>
                   <p className="text-slate-400 text-[11px]">
                     Acknowledged by {caseData.acknowledgedBy || hospitalProfile.onDutyCoordinator} at {caseData.timeAcknowledged || '14:08 UTC'}.
                   </p>
@@ -274,22 +298,22 @@ export default function CaseDetailPage() {
           )}
 
           {isDiverted && (
-            <div className="w-full bg-red-950/30 p-3 rounded-xl border border-red-500/40 text-xs text-red-300 flex items-center gap-2.5">
+            <div className="w-full bg-red-950/30 p-3.5 rounded-xl border border-red-500/40 text-xs text-red-300 flex items-center gap-2.5">
               <AlertOctagon className="h-5 w-5 text-red-400 shrink-0" />
               <div>
                 <span className="font-bold">Case Diverted / Rejected by Hospital</span>
                 <p className="text-red-400 text-[11px]">
-                  Reason: {caseData.divertReason}. Secondary matching initiated.
+                  Reason: {caseData.divertReason || 'Specialty Unavailable'}. Secondary regional matching active.
                 </p>
               </div>
             </div>
           )}
 
-          {/* Operational Override Button */}
+          {/* Tertiary Action: Human Clinical Override */}
           <div className="flex justify-end w-full pt-1">
             <button
               onClick={() => setIsOverrideModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 text-xs font-semibold transition"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-amber-300 border border-amber-500/30 text-xs font-semibold transition focus:outline-none focus:ring-2 focus:ring-amber-400"
             >
               <Sliders className="h-3.5 w-3.5 text-amber-400" />
               <span>Record Human Clinical Override</span>
@@ -298,17 +322,20 @@ export default function CaseDetailPage() {
         </div>
       </div>
 
-      {/* Two-Column Clinical & Operational Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Column: Structured Pre-Arrival Clinical Packet (7 cols) */}
-        <div className="lg:col-span-7 space-y-6">
-          {/* AI Structured Information Layer */}
+      {/* Two-Column Command Center Grid (Desktop Left ~65% / Right ~35%) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Left Column: Structured Pre-Arrival Clinical & Verification Packet (7 or 8 cols on desktop) */}
+        <div className="lg:col-span-7 xl:col-span-7 space-y-6">
+          {/* 4. AI Structured Information Layer */}
           <AIStructuredReportCard caseId={caseData.id} />
 
-          {/* Clinical Findings Packet */}
+          {/* 3. Pre-Arrival Clinical Summary Packet */}
           <CaseSummaryCard caseData={caseData} />
 
-          {/* Operational Readiness Checklist */}
+          {/* 5. EMS Verified Information (Vitals, Crew & Observations) */}
+          <EmsStatusCard emsUnit={caseData.emsUnit} />
+
+          {/* 7. Operational Readiness Checklist / Handover Staging */}
           <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-5 space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
               <div className="flex items-center gap-2">
@@ -350,28 +377,28 @@ export default function CaseDetailPage() {
               ))}
             </div>
           </div>
+
+          {/* 8. Chronological Decision Audit Timeline */}
+          <CaseTimeline events={caseData.timeline} caseId={caseData.id} />
         </div>
 
-        {/* Right Column: Hospital Matching, Simulation, EMS Status & Decision Audit Timeline (5 cols) */}
-        <div className="lg:col-span-5 space-y-6">
-          {/* Deterministic Matching & Diversion Intelligence */}
-          <HospitalMatchingCard caseId={caseData.id} />
+        {/* Right Column: Hospital Matching, Confirmed Destination & Real-Time Telemetry (5 cols on desktop) */}
+        <div className="lg:col-span-5 xl:col-span-5 space-y-6 lg:sticky lg:top-20">
+          {/* 3. Destination & Hospital Matching Intelligence */}
+          <HospitalMatchingCard 
+            caseId={caseData.id} 
+            currentDestinationId={caseData.destinationHospitalId || hospitalProfile.id}
+          />
 
-          {/* Real-Time Ambulance Simulation & Telemetry Controls */}
+          {/* 6. Real-Time Ambulance Simulation & Telemetry Controls */}
           <AmbulanceSimulationControlCard
             caseId={caseData.id}
             hasConfirmedDestination={true}
-            destinationHospitalId={caseData.destinationHospitalId || 'HOSP-CITYCARE-01'}
+            destinationHospitalId={caseData.destinationHospitalId || hospitalProfile.id}
             destinationHospitalName={hospitalProfile.name}
             liveTelemetry={liveTelemetry}
             onTelemetryUpdate={(tel) => setLiveTelemetry(tel)}
           />
-
-          {/* EMS Telemetry Card */}
-          <EmsStatusCard emsUnit={caseData.emsUnit} />
-
-          {/* Chronological Audit Timeline */}
-          <CaseTimeline events={caseData.timeline} caseId={caseData.id} />
         </div>
       </div>
 
@@ -404,8 +431,6 @@ export default function CaseDetailPage() {
         userName={hospitalProfile.onDutyCoordinator}
         userId="ED-COORD-01"
       />
-
     </div>
   );
 }
-

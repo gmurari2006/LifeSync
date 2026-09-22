@@ -47,6 +47,8 @@ interface HospitalContextType {
     awaitingAck: number;
     acknowledged: number;
     criticalCount: number;
+    highCount: number;
+    moderateCount: number;
     averageEta: number;
     availableBays: number;
     totalBays: number;
@@ -286,6 +288,8 @@ export function HospitalProvider({ children }: { children: ReactNode }) {
   const activeCases = cases.filter(c => c.status !== 'Closed' && c.status !== 'Diverted');
   const awaitingAck = cases.filter(c => c.status === 'Alerted');
   const criticalCount = activeCases.filter(c => c.operationalPriority === 'Critical').length;
+  const highCount = activeCases.filter(c => c.operationalPriority === 'High').length;
+  const moderateCount = activeCases.filter(c => c.operationalPriority === 'Moderate').length;
   
   const incomingWithEta = activeCases.filter(c => c.emsUnit.etaMinutes > 0);
   const avgEta = incomingWithEta.length 
@@ -304,6 +308,8 @@ export function HospitalProvider({ children }: { children: ReactNode }) {
     awaitingAck: awaitingAck.length,
     acknowledged: activeCases.length - awaitingAck.length,
     criticalCount,
+    highCount,
+    moderateCount,
     averageEta: avgEta,
     availableBays,
     totalBays,

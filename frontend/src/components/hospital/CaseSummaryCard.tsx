@@ -17,19 +17,25 @@ interface CaseSummaryCardProps {
 }
 
 export function CaseSummaryCard({ caseData: c }: CaseSummaryCardProps) {
-  const summary = c.clinicalSummary;
+  const summary = c?.clinicalSummary || ({} as any);
+  const reportedSymptoms = summary?.reportedSymptoms || [];
+  const pertinentNegatives = summary?.pertinentNegatives || [];
+  const knownAllergies = summary?.knownAllergies || [];
+  const knownMedications = summary?.knownMedications || [];
+  const relevantHistory = summary?.relevantHistory || [];
+  const specialtyRequirements = summary?.specialtyRequirements || [];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Pre-Arrival Banner Notice */}
-      <div className="rounded-xl border border-blue-500/30 bg-blue-950/20 p-3.5 flex items-start gap-3">
-        <ShieldAlert className="h-5 w-5 text-blue-400 shrink-0 mt-0.5" />
+      <div className="rounded-xl border border-blue-500/30 bg-blue-950/20 p-3 flex items-start gap-2.5">
+        <ShieldAlert className="h-4 w-4 text-blue-400 shrink-0 mt-0.5" />
         <div className="text-xs space-y-0.5">
-          <p className="font-semibold text-blue-200 uppercase tracking-wide">
-            Pre-Arrival Reported Clinical Summary
+          <p className="font-bold text-blue-200 uppercase tracking-wider text-[11px]">
+            PRE-ARRIVAL REPORTED CLINICAL SUMMARY
           </p>
-          <p className="text-slate-400 leading-relaxed">
-            Data captured at scene intake and synchronized before arrival. All values represent reported/pre-hospital observations for resource readiness. Final clinical evaluation performed on patient arrival.
+          <p className="text-slate-400 leading-relaxed text-[11px]">
+            Data originates from citizen reports and verified pre-hospital observations. Final clinical evaluation occurs on patient arrival.
           </p>
         </div>
       </div>
@@ -87,7 +93,7 @@ export function CaseSummaryCard({ caseData: c }: CaseSummaryCardProps) {
             <div>
               <span className="text-[11px] font-semibold text-slate-400 block mb-1.5">Detected Symptoms:</span>
               <div className="flex flex-wrap gap-1.5">
-                {summary.reportedSymptoms.map((symp, i) => (
+                {reportedSymptoms.map((symp: string, i: number) => (
                   <span
                     key={i}
                     className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium bg-red-950/30 text-red-300 border border-red-500/20"
@@ -99,11 +105,11 @@ export function CaseSummaryCard({ caseData: c }: CaseSummaryCardProps) {
               </div>
             </div>
 
-            {summary.pertinentNegatives.length > 0 && (
+            {pertinentNegatives.length > 0 && (
               <div>
                 <span className="text-[11px] font-semibold text-slate-400 block mb-1.5">Pertinent Negatives (Reported Absent):</span>
                 <div className="flex flex-wrap gap-1.5">
-                  {summary.pertinentNegatives.map((neg, i) => (
+                  {pertinentNegatives.map((neg: string, i: number) => (
                     <span
                       key={i}
                       className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium bg-slate-800/60 text-slate-300 border border-slate-700/50"
@@ -128,12 +134,16 @@ export function CaseSummaryCard({ caseData: c }: CaseSummaryCardProps) {
             <span>Known Allergies</span>
           </div>
           <ul className="text-xs text-slate-300 space-y-1">
-            {summary.knownAllergies.map((item, i) => (
-              <li key={i} className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
-                <span>{item}</span>
-              </li>
-            ))}
+            {knownAllergies.length === 0 ? (
+              <li className="text-slate-500 italic">None reported</li>
+            ) : (
+              knownAllergies.map((item: string, i: number) => (
+                <li key={i} className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
+                  <span>{item}</span>
+                </li>
+              ))
+            )}
           </ul>
         </div>
 
@@ -144,12 +154,16 @@ export function CaseSummaryCard({ caseData: c }: CaseSummaryCardProps) {
             <span>Known Medications</span>
           </div>
           <ul className="text-xs text-slate-300 space-y-1">
-            {summary.knownMedications.map((item, i) => (
-              <li key={i} className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0" />
-                <span>{item}</span>
-              </li>
-            ))}
+            {knownMedications.length === 0 ? (
+              <li className="text-slate-500 italic">None reported</li>
+            ) : (
+              knownMedications.map((item: string, i: number) => (
+                <li key={i} className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0" />
+                  <span>{item}</span>
+                </li>
+              ))
+            )}
           </ul>
         </div>
 
@@ -160,18 +174,22 @@ export function CaseSummaryCard({ caseData: c }: CaseSummaryCardProps) {
             <span>Relevant History</span>
           </div>
           <ul className="text-xs text-slate-300 space-y-1">
-            {summary.relevantHistory.map((item, i) => (
-              <li key={i} className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-purple-400 shrink-0" />
-                <span>{item}</span>
-              </li>
-            ))}
+            {relevantHistory.length === 0 ? (
+              <li className="text-slate-500 italic">None reported</li>
+            ) : (
+              relevantHistory.map((item: string, i: number) => (
+                <li key={i} className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-purple-400 shrink-0" />
+                  <span>{item}</span>
+                </li>
+              ))
+            )}
           </ul>
         </div>
       </div>
 
       {/* AI Structuring Note & Required Hospital Specialties */}
-      {summary.aiStructuringNotes && (
+      {summary?.aiStructuringNotes && (
         <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
@@ -187,7 +205,7 @@ export function CaseSummaryCard({ caseData: c }: CaseSummaryCardProps) {
 
           <div className="flex flex-wrap items-center gap-2 pt-1">
             <span className="text-xs text-slate-400 font-medium">Recommended Specialties:</span>
-            {summary.specialtyRequirements.map((spec, i) => (
+            {specialtyRequirements.map((spec: string, i: number) => (
               <span
                 key={i}
                 className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-900/40 text-blue-200 border border-blue-700/50"

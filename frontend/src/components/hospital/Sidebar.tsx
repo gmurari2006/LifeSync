@@ -103,21 +103,21 @@ export function Sidebar() {
         {/* Quick Triage Acuity Guide Box */}
         <div className="rounded-xl border border-slate-800/80 bg-slate-900/40 p-3.5 space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-300">Operational Priority</span>
+            <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Operational Priority</span>
             <ShieldCheck className="h-3.5 w-3.5 text-blue-400" />
           </div>
-          <div className="text-[11px] space-y-1 text-slate-400">
+          <div className="text-[11px] space-y-1.5 text-slate-400">
             <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-red-500" /> Critical</span>
-              <span className="font-mono text-red-400">{stats.criticalCount}</span>
+              <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" /> Critical</span>
+              <span className="font-mono font-bold text-red-400">{String(stats.criticalCount ?? 0).padStart(2, '0')}</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-400" /> High</span>
-              <span className="font-mono text-amber-400">2</span>
+              <span className="font-mono font-bold text-amber-400">{String(stats.highCount ?? 0).padStart(2, '0')}</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-sky-400" /> Moderate</span>
-              <span className="font-mono text-sky-400">2</span>
+              <span className="font-mono font-bold text-sky-400">{String(stats.moderateCount ?? 0).padStart(2, '0')}</span>
             </div>
           </div>
         </div>

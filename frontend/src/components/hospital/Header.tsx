@@ -122,13 +122,13 @@ export function Header() {
           <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-md border border-slate-800 bg-slate-900/80">
             <span
               className={`w-2 h-2 rounded-full ${
-                hospitalProfile.operationalStatus === 'Operational'
+                hospitalProfile?.operationalStatus === 'Operational'
                   ? 'bg-emerald-400 animate-pulse'
                   : 'bg-amber-400'
               }`}
             />
             <span className="text-xs font-medium text-slate-300">
-              {hospitalProfile.operationalStatus.toUpperCase()}
+              {(hospitalProfile?.operationalStatus || 'OPERATIONAL').toUpperCase()}
             </span>
           </div>
 
@@ -159,10 +159,10 @@ export function Header() {
             </div>
             <div className="hidden xl:flex flex-col text-left">
               <span className="text-xs font-semibold text-slate-200">
-                {hospitalProfile.onDutyCoordinator}
+                {hospitalProfile?.onDutyCoordinator || 'ED Coordinator'}
               </span>
               <span className="text-[10px] text-slate-400">
-                {hospitalProfile.coordinatorRole.split('/')[0]}
+                {(hospitalProfile?.coordinatorRole || 'Lead Triage').split('/')[0]}
               </span>
             </div>
           </div>

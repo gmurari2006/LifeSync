@@ -60,7 +60,7 @@ export function ReadinessSummary() {
                 className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border shrink-0 ${colors.bg} ${colors.text} ${colors.border}`}
               >
                 <span className={`w-1.5 h-1.5 rounded-full ${colors.dot}`} />
-                {res.status.toUpperCase()}
+                {(res.status || 'UNKNOWN').toUpperCase()}
               </span>
             </div>
           );
