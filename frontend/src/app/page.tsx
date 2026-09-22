@@ -1,17 +1,11 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { 
   Activity, 
   ArrowRight, 
   AlertOctagon, 
   Ambulance, 
   Building2, 
-  CheckCircle2, 
-  Clock, 
-  ShieldCheck, 
-  Sparkles, 
-  Navigation,
-  Compass
+  CheckCircle2
 } from 'lucide-react';
 
 export default function Home() {
@@ -53,76 +47,9 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Main Hero Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-10">
+      {/* Main Content Container */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
         
-        {/* Hero Banner Grid: Left Copy & Right Authentic Visual */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white border border-slate-200 rounded-2xl p-6 sm:p-10 shadow-xs">
-          <div className="lg:col-span-7 space-y-5">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-200 bg-blue-50 text-blue-700 text-xs font-semibold">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Production-Grade Pre-Hospital Platform</span>
-            </div>
-
-            <div className="space-y-3">
-              <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-900 leading-tight">
-                Critical emergency information reaches the right team before the patient does.
-              </h1>
-              <p className="text-base text-slate-600 max-w-xl leading-relaxed">
-                LifeSync synchronizes citizen scene observations, verified paramedic telemetry, and hospital resuscitation readiness into one deterministic, human-controlled workflow.
-              </p>
-            </div>
-
-            {/* Core Principle Quote */}
-            <div className="border-l-3 border-blue-600 bg-slate-50 p-4 rounded-r-xl text-slate-700 text-sm font-medium italic">
-              &ldquo;Seconds matter in acute clinical triage. LifeSync bridges the pre-hospital information gap so trauma and medical teams are staged before the ambulance arrives.&rdquo;
-            </div>
-
-            {/* Quick Launch Buttons */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <Link
-                href="/citizen"
-                className="px-5 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-sm transition-colors inline-flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-              >
-                <span>Report an Emergency</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link
-                href="/ems"
-                className="px-4 py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 font-semibold text-sm shadow-xs transition-colors inline-flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <Ambulance className="w-4 h-4 text-slate-600" />
-                <span>EMS Console</span>
-              </Link>
-              <Link
-                href="/hospital"
-                className="px-4 py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 font-semibold text-sm shadow-xs transition-colors inline-flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <Building2 className="w-4 h-4 text-slate-600" />
-                <span>Hospital Command</span>
-              </Link>
-            </div>
-          </div>
-
-          {/* Right Hero Media Frame */}
-          <div className="lg:col-span-5">
-            <div className="relative rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-slate-100 aspect-video">
-              <Image
-                src="/images/lifesync_hero.jpg"
-                alt="LifeSync Emergency Response Coordination"
-                fill
-                priority
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 500px"
-              />
-              <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-900/80 to-transparent p-3 text-white text-[11px] font-medium flex items-center justify-between">
-                <span>Emergency Department Bay 1 &middot; Active Coordination</span>
-                <span className="font-mono text-[10px] bg-black/40 px-2 py-0.5 rounded">DEMO CONTEXT</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* The 7-Step Emergency Coordination Sequence */}
         <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
